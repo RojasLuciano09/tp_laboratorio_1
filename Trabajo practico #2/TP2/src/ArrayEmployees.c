@@ -31,10 +31,10 @@ static int UpperFirstChar(char *string)
 		char bufferName[LONG_NOMBRE];
 		strncpy(bufferName, string, LONG_NOMBRE);
 		bufferName[0] = toupper(bufferName[0]);
-		for(int i=1;i<LONG_NOMBRE;i++)
-		{
-		bufferName[i] = tolower(bufferName[i]);
-		}
+			for(int i=1;i<LONG_NOMBRE;i++)
+			{
+				bufferName[i] = tolower(bufferName[i]);
+			}
 		strncpy(string, bufferName, LONG_NOMBRE);
 		functionReturn = 0;
 	}
@@ -58,15 +58,9 @@ int employee_AddEmployeeData(Employee *list, int len) {
 	if(list!=NULL && len>0)
 	{
 		if ((employee_seachFreeIndex(list, len, &index) == 0)
-			&& (utn_getName("\nIngresar nombre: ", "\n Error! Ingrese un dato valido.\n", name, ATTEMPTS,
-					LONG_NOMBRE) == 0)
-
-			&& (utn_getName("Ingresar apellido: ","\n Error! Ingrese un dato valido.\n", lastName,
-					ATTEMPTS, LONG_NOMBRE) == 0)
-
-			&& (utn_getNumberInt("Ingresar sector <1-2-3-4-5> : ", "\n Error! Ingrese un dato valido.\n",
-					&sector, ATTEMPTS, 1, 5) == 0)
-
+			&& (utn_getCadena("\nIngresar nombre: ", "\n Error! Ingrese un dato valido.\n", name, ATTEMPTS,LONG_NOMBRE) == 0)
+			&& (utn_getCadena("Ingresar apellido: ","\n Error! Ingrese un dato valido.\n", lastName,ATTEMPTS, LONG_NOMBRE) == 0)
+			&& (utn_getNumberInt("Ingresar sector <1-2-3-4-5> : ", "\n Error! Ingrese un dato valido.\n",&sector, ATTEMPTS, 1, 5) == 0)
 			&& (utn_getNumberFloat("Ingrese su salario: ","\n Error! Ingrese un dato valido.\n", &salary,
 					ATTEMPTS, 0, INT_MAX) == 0))
 	{
@@ -251,32 +245,22 @@ int employee_ModifyData(Employee *list, int len)
 	int modifyFlag;
 	if (list != NULL && len > 0 && isEmpty(list,len)==0)
 	{
-		if (utn_getNumberInt("\nIngrese el ID del empleado a modificar: ",
-				"\n Error! Ingrese un dato valido.\n", &ID, ATTEMPTS, 0, INT_MAX)
-				== 0)
+		if (utn_getNumberInt("\nIngrese el ID del empleado a modificar: ","\n Error! Ingrese un dato valido.\n", &ID, ATTEMPTS, 0, INT_MAX)== 0)
 		{
 			index = findEmployeeById(list, ID, len);
-			if (index != -1) //isEmpty == TRUE
+			if (index != -1)
 					{
 				Employee bufferEmployee = list[index];
 				modifyFlag = FALSE;
-
 				do {
-
-					utn_getNumberInt(
-							"\n¿Que campo desea modificar? \n1-Nombre: \n2-Apellido: \n3-Salario: \n4-Sector: \n5-FINALIZAR EDICION: ",
-							"\n Error! Ingrese un dato valido.\n",
+					utn_getNumberInt("\n¿Que campo desea modificar? \n1-Nombre: \n2-Apellido: \n3-Salario: \n4-Sector: \n5-FINALIZAR EDICION: ","\n Error! Ingrese un dato valido.\n",
 							&fieldToModify,
 							ATTEMPTS, 1, 5);
 					switch (fieldToModify)
 					{
 					case 1:
-						if (utn_getName(
-								"\nIngrese el nuevo nombre del empleado: ",
-								"\n Error! Ingrese un dato valido.\n",
-								bufferEmployee.name, ATTEMPTS, LONG_NOMBRE)
-								== 0)
-								{
+						if (utn_getCadena("\nIngrese el nuevo nombre del empleado: ","\n Error! Ingrese un dato valido.\n",bufferEmployee.name, ATTEMPTS, LONG_NOMBRE)== 0)
+						{
 							printf("\nSe actualizo correctamente el empleado\n");
 							modifyFlag = TRUE;
 							functionReturn = 0;
@@ -284,11 +268,8 @@ int employee_ModifyData(Employee *list, int len)
 						break;
 
 					case 2:
-						if (utn_getName(
-								"\nIngrese el nuevo apellido del empleado: ",
-								"\n Error! Ingrese un dato valido.\n",
-								bufferEmployee.lastName, ATTEMPTS, LONG_NOMBRE)
-								== 0) {
+						if (utn_getCadena("\nIngrese el nuevo apellido del empleado: ","\n Error! Ingrese un dato valido.\n",bufferEmployee.lastName, ATTEMPTS, LONG_NOMBRE)== 0)
+						{
 							printf("\nSe actualizo correctamente el empleado\n");
 							modifyFlag = TRUE;
 							functionReturn = 0;
@@ -296,24 +277,15 @@ int employee_ModifyData(Employee *list, int len)
 						break;
 
 					case 3:
-						if (utn_getNumberFloat(
-								"\nIngrese el nuevo salario del empleado: ",
-								"\n Error! Ingrese un dato valido.\n",
-								&bufferEmployee.salary, ATTEMPTS, 0, 9999.00)
-								== 0) {
+						if (utn_getNumberFloat("\nIngrese el nuevo salario del empleado: ","\n Error! Ingrese un dato valido.\n",&bufferEmployee.salary, ATTEMPTS, 0,INT_MAX)== 0)
+						{
 							printf("\nSe actualizo correctamente el empleado\n");
 							modifyFlag = TRUE;
 							functionReturn = 0;
 						}
 						break;
 					case 4:
-						if (
-
-						utn_getNumberInt(
-								"\nIngrese el nuevo sector del empleado <1-2-3-4-5>: ",
-								"\n Error! Ingrese un dato valido.\n",
-								&bufferEmployee.sector, ATTEMPTS, 1, 5) == 0)
-
+						if (utn_getNumberInt("\nIngrese el nuevo sector del empleado <1-2-3-4-5>: ","\n Error! Ingrese un dato valido.\n",&bufferEmployee.sector, ATTEMPTS, 1, 5) == 0)
 						{
 							printf("\nSe actualizo correctamente el empleado\n");
 							modifyFlag = TRUE;
@@ -321,20 +293,21 @@ int employee_ModifyData(Employee *list, int len)
 						}
 						break;
 					}
-
-					if (modifyFlag == TRUE) {
+					if (modifyFlag == TRUE)
+					{
 						AddEmployees(list, len, ID, bufferEmployee.name,
-								bufferEmployee.lastName, bufferEmployee.salary,
-								bufferEmployee.sector, index);
+						bufferEmployee.lastName, bufferEmployee.salary,
+						bufferEmployee.sector, index);
 					}
-
-				} while (fieldToModify != 5);
-
-			} else {
+				}while (fieldToModify != 5);
+			}
+			else
+			{
 				printf("\nID inexistente \n ");
 			}
-
-		} else {
+		}
+		else
+		{
 			printf("\nError. ");
 		}
 	}
@@ -354,7 +327,7 @@ int removeEmployee(Employee *list, int len, int id)
 	if (list != NULL && len > 0)
 	{
 		bufferIndex = findEmployeeById(list, len, id);
-		if (bufferIndex != -1)
+		if(bufferIndex != -1)
 		{
 			list[bufferIndex].isEmpty = TRUE;
 			functionReturn = 0;
@@ -377,9 +350,7 @@ int employee_removeEmployee(Employee *list, int len)
 	if (list != NULL && len > 0 && isEmpty(list, len)==0)
 	{
 		do {
-			if (utn_getNumberInt("\nIngrese el id a eliminar: ",
-					"\n Error! Ingrese un dato valido.\n", &idToFind, ATTEMPTS,
-					0, INT_MAX) == 0)
+			if (utn_getNumberInt("\nIngrese el id a eliminar: ","\n Error! Ingrese un dato valido.\n", &idToFind, ATTEMPTS,0, INT_MAX) == 0)
 			{
 				if (removeEmployee(list, idToFind, len) == 0)
 				{
@@ -388,13 +359,10 @@ int employee_removeEmployee(Employee *list, int len)
 				} else
 				{
 					flagRemove = 1;
-					utn_getNumberInt(
-							"\nEmpleado inexiste. Desde intentar nuevamente? \n1-Si \n2-No",
-							"\n Error! Ingrese un dato valido.\n", &flagRemove,
-							ATTEMPTS, 1, 2);
+					utn_getNumberInt("\nEmpleado inexiste. Desde intentar nuevamente? \n1-Si \n2-No","\n Error! Ingrese un dato valido.\n", &flagRemove,ATTEMPTS, 1, 2);
 				}
 			}
-		} while (flagRemove != 2);
+		} while(flagRemove != 2);
 	}
 	return functionReturn;
 }

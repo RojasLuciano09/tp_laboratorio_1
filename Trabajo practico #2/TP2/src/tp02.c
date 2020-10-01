@@ -78,6 +78,5 @@ int main(void) {
    }while(op!=5);
 	printf("\nShutting down application...\n");
  }
-
 	return EXIT_SUCCESS;
 }

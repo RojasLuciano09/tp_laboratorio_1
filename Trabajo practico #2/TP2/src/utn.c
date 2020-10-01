@@ -217,7 +217,7 @@ static int isNumberFloat(char cadena[])
 * \param limite indica la cantidad maxima del nombre
  * return (-1) ERROR / 0 OK
  */
-int utn_getName(char* pMensaje, char* pMensajeError, char* pResultado, int reintentos, int limite)
+int utn_getCadena(char* pMensaje, char* pMensajeError, char* pResultado, int reintentos, int limite)
 {
 	char bufferString[LIMITE_BUFFER_STRING];
 	int retorno = -1;
