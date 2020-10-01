@@ -29,12 +29,12 @@ int findEmployeeById(Employee* EmployeeList,int id, int limite);
 int removeEmployee(Employee* list, int len, int id);
 int sortEmployees(Employee* list, int len, int order);
 int printEmployees(Employee* list, int limite);
-int employee_AddEmployeeData(Employee *list, int len,int *pFlagFirstLoad);
+int employee_AddEmployeeData(Employee *list, int len);
 int employee_seachFreeIndex(Employee* EmployeeList, int limite,int *pIndiceLibre);
-int employee_ModifyData(Employee *list, int len, int flagFirstLoad);
+int employee_ModifyData(Employee *list, int len);
 int employee_calculateAverageSalary(Employee* list, int len, float *pAvg, int *pSAvg, float *acumulatorSalary);
-int employee_Report(Employee *list, int len,int flagFirstLoad);
-int employee_removeEmployee(Employee *list, int len, int flagFirstLoad);
+int employee_Report(Employee *list, int len);
+int employee_removeEmployee(Employee *list, int len);
 
 
 

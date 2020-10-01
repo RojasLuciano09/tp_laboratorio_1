@@ -12,6 +12,7 @@
 #include <ctype.h>
 
 static int generateNewID(void);
+static int isEmpty(Employee *list, int len);
 static int receiveMoreThanAverage(Employee *list, int len, float salaryAverage,int *pQTYemployeesWhoReceiveMoreThanAverage);
 static int sortEmployeeBySector(Employee *list, int len, int order);
 static int sortEmployeeByLastName(Employee *list, int len, int order);
@@ -46,7 +47,7 @@ static int UpperFirstChar(char *string)
  * \param pFlagFirstLoad: if it is true we can use the function
  * \return functionReturn : (-1) if Error [Invalid len or  the list is out of data] - (0) if Ok
  */
-int employee_AddEmployeeData(Employee *list, int len,int *pFlagFirstLoad) {
+int employee_AddEmployeeData(Employee *list, int len) {
 	int functionReturn = -1;
 	int id;
 	char name[51];
@@ -75,7 +76,7 @@ int employee_AddEmployeeData(Employee *list, int len,int *pFlagFirstLoad) {
 	} else {
 		printf("\nHubo un error en la carga. ");
 	}
-	*pFlagFirstLoad=TRUE;
+
 	}
 	return functionReturn;
 }
@@ -90,7 +91,7 @@ static int sortEmployeeByLastName(Employee *list, int len, int order) {
 	int functionReturn = -1;
 	int sorted;
 	Employee bufferEmployee;
-	if(list!=NULL&& len >0)
+	if(list!=NULL&& len >0 && isEmpty(list, len)==0)
 	{
 		do{
 		sorted = TRUE;
@@ -144,7 +145,7 @@ static int sortEmployeeBySector(Employee *list, int len, int order) {
 	int functionReturn = -1;
 	int sorted;
 	Employee bufferEmployee;
-	if(list!=NULL && len>0)
+	if(list!=NULL && len>0 )
 	{
 	do {
 		sorted = TRUE;
@@ -184,13 +185,13 @@ static int sortEmployeeBySector(Employee *list, int len, int order) {
  * \param flagFirstLoad : if it is true we can use the function
  * \return functionReturn : (-1) if Error [Invalid len or  the list is out of data] - (0) if Ok
  */
-int employee_Report(Employee *list, int len,int flagFirstLoad) {
+int employee_Report(Employee *list, int len) {
 	int functionReturn = -1;
 	int orderBy;
 	float totalSalary;
 	float averageSalary;
 	int moreThanAverage;
-	if (list != NULL && len > 0 && flagFirstLoad==TRUE)
+	if (list != NULL && len > 0 && isEmpty(list, len)==0)
 	{
 		if (utn_getNumberInt(
 				"\nIngrese un valor para ordenar: \n1-Descendante \n2-Ascendente ",
@@ -272,14 +273,14 @@ static int receiveMoreThanAverage(Employee *list, int len, float salaryAverage,i
  * \param flagFirstLoad : if it is true we can use the function
  * \return functionReturn : (-1) if Error [Invalid len or  the list is out of data] - (0) if Ok
  */
-int employee_ModifyData(Employee *list, int len, int flagFirstLoad)
+int employee_ModifyData(Employee *list, int len)
 {
 	int functionReturn = -1;
 	int index;
 	int ID;
 	int fieldToModify;
 	int modifyFlag;
-	if (list != NULL && len > 0 && flagFirstLoad == TRUE)
+	if (list != NULL && len > 0 && isEmpty(list,len)==0)
 	{
 		if (utn_getNumberInt("\nIngrese el ID del empleado a modificar: ",
 				"\n Error! Ingrese un dato valido.\n", &ID, ATTEMPTS, 0, INT_MAX)
@@ -399,12 +400,12 @@ int removeEmployee(Employee *list, int len, int id)
  * \param flagFirstLoad : if it is true we can use the function
  * \return functionReturn : (-1) if Error [Invalid len or  the list is out of data] - (0) if Ok
  */
-int employee_removeEmployee(Employee *list, int len, int flagFirstLoad)
+int employee_removeEmployee(Employee *list, int len)
 {
 	int idToFind;
 	int functionReturn = -1;
 	int flagRemove = 2;
-	if (list != NULL && len > 0 && flagFirstLoad == TRUE)
+	if (list != NULL && len > 0 && isEmpty(list, len)==0)
 	{
 		do {
 			if (utn_getNumberInt("\nIngrese el id a eliminar: ",
@@ -552,5 +553,29 @@ int printEmployees(Employee *list, int len) {
 			}
 			functionReturn = 0;
 	    }
+	return functionReturn;
+}
+
+
+/** \brief: Check if the entire list of employees is empty
+ * \param list : current list of employees
+ * \param len : list len
+ * \return functionReturn : (-1) if Error [Invalid len or  the list is out of data] - (0) if Ok
+ */
+static int isEmpty(Employee *list, int len)
+{
+	int functionReturn =-1;
+	if(list != NULL && len > 0)
+	{
+		for(int i=0; i<len; i++)
+		{
+			if(list[i].isEmpty == FALSE)
+			{
+				functionReturn =0;
+				break;
+			}
+		}
+	}
+
 	return functionReturn;
 }
