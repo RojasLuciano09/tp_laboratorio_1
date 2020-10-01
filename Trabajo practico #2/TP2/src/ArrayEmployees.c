@@ -88,51 +88,32 @@ int employee_AddEmployeeData(Employee *list, int len) {
  * \return functionReturn : (-1) if Error [Invalid len or  the list is out of data] - (0) if Ok
  */
 static int sortEmployeeByLastName(Employee *list, int len, int order) {
-	int functionReturn = -1;
+	int retorno = -1;
 	int sorted;
 	Employee bufferEmployee;
-	if(list!=NULL&& len >0 && isEmpty(list, len)==0)
+	do
 	{
-		do{
 		sorted = TRUE;
-		for (int i = 0; i < (len - 1); i++)
+		for(int i = 0; i < (len-1); i++)
 		{
-			switch (order)
+			if((order == 1 &&
+			  (strncmp(list[i].lastName, list[i + 1].lastName,LONG_NOMBRE)>0 ||
+			  (strncmp(list[i].lastName, list[i + 1].lastName,LONG_NOMBRE)==0 &&
+			   strncmp(list[i].name, list[i + 1].name,LONG_NOMBRE)>0))) ||
+			  (order == 2 &&
+			  (strncmp(list[i].lastName, list[i + 1].lastName,LONG_NOMBRE)<0 ||
+			  (strncmp(list[i].lastName, list[i + 1].lastName,LONG_NOMBRE)==0 &&
+			   strncmp(list[i].name, list[i + 1].name,LONG_NOMBRE)<0))))
 			{
-			case 1:
-				if (strncmp(list[i].lastName, list[i + 1].lastName, LONG_NOMBRE)
-						> 0
-						|| (strncmp(list[i].lastName, list[i + 1].lastName,
-								LONG_NOMBRE) == 0
-								&& strncmp(list[i].name, list[i + 1].name,
-										LONG_NOMBRE) > 0))
-				{
-					bufferEmployee = list[i];
-					list[i] = list[i + 1];
-					list[i + 1] = bufferEmployee;
-					sorted = FALSE;
-				}
-				break;
-			case 2:
-				if (strncmp(list[i].lastName, list[i + 1].lastName, LONG_NOMBRE)
-						< 0
-						|| (strncmp(list[i].lastName, list[i + 1].lastName,
-								LONG_NOMBRE) == 0
-								&& strncmp(list[i].name, list[i + 1].name,
-										LONG_NOMBRE) < 0))
-				{
-					bufferEmployee = list[i];
-					list[i] = list[i + 1];
-					list[i + 1] = bufferEmployee;
-					sorted = FALSE;
-				}
-				break;
+				bufferEmployee = list[i];
+				list[i] = list[i + 1];
+				list[i + 1] = bufferEmployee;
+				sorted = FALSE;
 			}
 		}
-	} while (sorted == FALSE);
-	functionReturn = 0;
-	}
-	return functionReturn;
+	}while(sorted == FALSE);
+	retorno = 0;
+	return retorno;
 }
 
 /** \brief: Sort the list according to the sector of each employee
@@ -142,41 +123,28 @@ static int sortEmployeeByLastName(Employee *list, int len, int order) {
  * \return functionReturn : (-1) if Error [Invalid len or  the list is out of data] - (0) if Ok
  */
 static int sortEmployeeBySector(Employee *list, int len, int order) {
-	int functionReturn = -1;
+	int retorno = -1;
 	int sorted;
 	Employee bufferEmployee;
-	if(list!=NULL && len>0 )
+
+	do
 	{
-	do {
 		sorted = TRUE;
-		for (int i = 0; i < (len - 1); i++)
+		for(int i = 0; i < (len-1); i++)
 		{
-			switch (order)
+
+			if((order == 1 && list[i].sector > list[i + 1].sector) ||
+			   (order == 2 && list[i].sector < list[i + 1].sector))
 			{
-			case 1:
-				if (list[i].sector > list[i + 1].sector)
-				{
-					bufferEmployee = list[i];
-					list[i] = list[i + 1];
-					list[i + 1] = bufferEmployee;
-					sorted = FALSE;
-				}
-				break;
-			case 2:
-				if (list[i].sector < list[i + 1].sector)
-				{
-					bufferEmployee = list[i];
-					list[i] = list[i + 1];
-					list[i + 1] = bufferEmployee;
-					sorted = FALSE;
-				}
-				break;
+				bufferEmployee = list[i];
+				list[i] = list[i + 1];
+				list[i + 1] = bufferEmployee;
+				sorted = FALSE;
 			}
 		}
-	} while (sorted == FALSE);
-	functionReturn = 0;
-	}
-	return functionReturn;
+	}while(sorted == FALSE);
+	retorno = 0;
+	return retorno;
 }
 
 /** \brief: Report of all employees on the list with descending and ascending options
@@ -195,17 +163,18 @@ int employee_Report(Employee *list, int len) {
 	{
 		if (utn_getNumberInt(
 				"\nIngrese un valor para ordenar: \n1-Descendante \n2-Ascendente ",
-				"\n Error! Ingrese un dato valido.\n", &orderBy, ATTEMPTS, 0, 2) == 0)
+				"\n Error! Ingrese un dato valido.\n", &orderBy, ATTEMPTS, 1, 2) == 0)
 		{
-			sortEmployeeByLastName(list, len, orderBy);
 			sortEmployeeBySector(list, len, orderBy);
+			sortEmployeeByLastName(list, len, orderBy);
+
 			calculateTotalAndAverageSalary(list, len, &totalSalary,&averageSalary);
 			receiveMoreThanAverage(list, len, averageSalary, &moreThanAverage);
 			functionReturn = 0;
 		}
 		printEmployees(list, len);
-		printf("\nEl salario total es : %.2f "
-				"\nEl promedio del salario es : %2.f "
+		printf("\nEl salario total es : $%.2f "
+				"\nEl promedio del salario es : $%2.f "
 				"\nCantidad de empleados que superan el promedio es: %d \n",
 				totalSalary, averageSalary, moreThanAverage);
 	}
