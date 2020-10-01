@@ -2,9 +2,19 @@
  ============================================================================
  Name        : tp02.c
  Author      : Nicolas Luciano Rojas
- Version     :
- Copyright   : Your copyright notice
- Description : Hello World in C, Ansi-style
+ Version     : Final
+ Description :Una empresa requiere un sistema para administrar su nómina de empleados.
+ Se sabe que dicha nómina bajo ninguna circunstancia superara los 1000 empleados.
+
+ El sistema deberá tener el siguiente menú de opciones:
+ 1. ALTAS: Se debe permitir ingresar un empleado calculando automáticamente el número
+ de Id. El resto de los campos se le pedirá al usuario.
+ 2. MODIFICAR: Se ingresará el Número de Id, permitiendo modificar: o Nombre o Apellido
+ o Salario o Sector
+ 3. BAJA: Se ingresará el Número de Id y se eliminará el empleado del sistema.
+ 4. INFORMAR:
+ A. Listado de los empleados ordenados alfabéticamente por Apellido y Sector.
+ B. Total y promedio de los salarios, y cuántos empleados superan el salario promedio.
  ============================================================================
  */
 
