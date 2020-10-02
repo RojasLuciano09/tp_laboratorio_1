@@ -44,7 +44,6 @@ static int UpperFirstChar(char *string)
 /** \brief: Add a new employee to the list
  * \param list  		: current list of employees
  * \param len 			: list length
- * \param pFlagFirstLoad: if it is true we can use the function
  * \return functionReturn : (-1) if Error [Invalid len or  the list is out of data] - (0) if Ok
  */
 int employee_AddEmployeeData(Employee *list, int len) {
@@ -65,7 +64,7 @@ int employee_AddEmployeeData(Employee *list, int len) {
 					ATTEMPTS, 0, INT_MAX) == 0))
 	{
 		id = generateNewID();
-		AddEmployees(list, len, id, name, lastName, salary, sector,index);
+		addToList(list, len, id, name, lastName, salary, sector,index);
 		functionReturn = 0;
 	} else {
 		printf("\nHubo un error en la carga. ");
@@ -144,7 +143,6 @@ static int sortEmployeeBySector(Employee *list, int len, int order) {
 /** \brief: Report of all employees on the list with descending and ascending options
  * \param list  		: current list of employees
  * \param len 			: list length
- * \param flagFirstLoad : if it is true we can use the function
  * \return functionReturn : (-1) if Error [Invalid len or  the list is out of data] - (0) if Ok
  */
 int employee_Report(Employee *list, int len) {
@@ -233,7 +231,6 @@ static int receiveMoreThanAverage(Employee *list, int len, float salaryAverage,i
 /** \brief: Modify an employee from the list using their ID
  * \param list  		: current list of employees
  * \param len 			: list length
- * \param flagFirstLoad : if it is true we can use the function
  * \return functionReturn : (-1) if Error [Invalid len or  the list is out of data] - (0) if Ok
  */
 int employee_ModifyData(Employee *list, int len)
@@ -295,7 +292,7 @@ int employee_ModifyData(Employee *list, int len)
 					}
 					if (modifyFlag == TRUE)
 					{
-						AddEmployees(list, len, ID, bufferEmployee.name,
+						addToList(list, len, ID, bufferEmployee.name,
 						bufferEmployee.lastName, bufferEmployee.salary,
 						bufferEmployee.sector, index);
 					}
@@ -339,7 +336,6 @@ int removeEmployee(Employee *list, int len, int id)
 /** \brief: Remove an employee from the list using their ID
  * \param list  		: current list of employees
  * \param len 			: list length
- * \param flagFirstLoad : if it is true we can use the function
  * \return functionReturn : (-1) if Error [Invalid len or  the list is out of data] - (0) if Ok
  */
 int employee_removeEmployee(Employee *list, int len)
@@ -453,7 +449,7 @@ int employee_seachFreeIndex(Employee *list, int len, int *pFreeIndex) {
  * \return int Return (-1) if Error [Invalid len or NULL pointer or without
  free space] - (0) if Ok
  */
-int AddEmployees(Employee *list, int len, int id, char name[], char lastName[],float salary, int sector, int index)
+int addToList(Employee *list, int len, int id, char name[], char lastName[],float salary, int sector, int index)
 {
 	int functionReturn = -1;
 	if (list != NULL && len > 0)
