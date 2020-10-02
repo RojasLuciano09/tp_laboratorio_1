@@ -257,13 +257,18 @@ int utn_getCadena(char* pMensaje, char* pMensajeError, char* pResultado, int rei
  */
 static int myGets(char array[], int longitud)
 {
-	fflush(stdin);
-	fgets(array, longitud, stdin);
-	array[strlen(array)-1]= '\0';
-
-	return 0;
-}
-
+		int retorno=-1;
+		fflush(stdin);// fflush o __fpurge
+		if(array != NULL && longitud >0 && fgets(array,longitud,stdin)==array && array[0] != '\n')
+		{
+			if(array[strlen(array)-1] == '\n')
+			{
+				array[strlen(array)-1] = '\0';
+			}
+			retorno=0;
+		}
+		return retorno;
+	}
 /*
 * \brief Verifica una cadena como parametro para determinar si es nombre valido
 * \param char cadena[], cadena a analizar
