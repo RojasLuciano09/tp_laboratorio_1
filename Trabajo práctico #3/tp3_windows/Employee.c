@@ -8,12 +8,10 @@
 
 static int UpperFirstChar(char *string);
 
-/**
- * @fn
- * @brief
- * @param
- * @param
- * @return (-1) Error (0) todo OK
+/** \brief Capitalizes the first letter of a string
+ *
+ * \param string char* : string to capitalize the first character.
+ * \return int output : (-1) If there was an error (0) if the process was successful.
  */
 static int UpperFirstChar(char *string)
 {
@@ -33,12 +31,10 @@ static int UpperFirstChar(char *string)
 	return functionReturn;
 }
 
-/**
- * @fn
- * @brief 	asigna un valor entero
- * @param
- * @param
- * @return (-1) Error (0) todo OK
+/** \brief Set an id to an employee
+ *
+ * \param id int : Id that will be assigned to the employee
+ * \return int output : (-1) If there was an error (0) if the process was successful.
  */
 int employee_setId(Employee* this,int id)
 {
@@ -51,12 +47,10 @@ int employee_setId(Employee* this,int id)
 	return output;
 }
 
-/**
- * @fn
- * @brief 	Devuelve por puntero un entero
- * @param
- * @param
- * @return (-1) Error (0) todo OK
+/** \brief Get an id to an employee
+ *
+ * \param id int* : Pointer that will have the memory address of the id obtained
+ * \return int output : (-1) If there was an error (0) if the process was successful.
  */
 int  employee_getId(Employee* this,int* id)
 {
@@ -69,12 +63,10 @@ int  employee_getId(Employee* this,int* id)
 	return output;
 }
 
-/**
- * @fn
- * @brief 	Este asigna un valor char
- * @param
- * @param
- * @return (-1) Error (0) todo OK
+/** \brief Set a string as the name of an employee
+ *
+ * \param nombre char* : String as name to an employee
+ * \return int output : (-1) If there was an error (0) if the process was successful.
  */
 int employee_setNombre(Employee* this,char* nombre)
 {
@@ -88,12 +80,10 @@ int employee_setNombre(Employee* this,char* nombre)
 	return output;
 }
 
-/**
- * @fn
- * @brief 	Devuelve por puntero un char
- * @param
- * @param
- * @return (-1) Error (0) todo OK
+/** \brief Gets the name of an employee
+ *
+ * \param nombre char* : Pointer that will have the memory address of the employee's name
+ * \return int output : (-1) If there was an error (0) if the process was successful.
  */
 int employee_getNombre(Employee* this,char* nombre)
 {
@@ -106,12 +96,10 @@ int employee_getNombre(Employee* this,char* nombre)
 	return retornar;
 }
 
-/**
- * @fn
- * @brief 	Asigna un valor de tipo entero
- * @param
- * @param
- * @return (-1) Error (0) todo OK
+/** \brief Set an amount of hours to an employee
+ *
+ * \param horasTrabajadas int : Amounts of hours worked
+ * \return int output : (-1) If there was an error (0) if the process was successful.
  */
 int employee_setHorasTrabajadas(Employee* this,int horasTrabajadas)
 {
@@ -125,12 +113,10 @@ int employee_setHorasTrabajadas(Employee* this,int horasTrabajadas)
 
 }
 
-/**
- * @fn
- * @brief 	Devuelve por puntero un entero
- * @param
- * @param
- * @return (-1) Error (0) todo OK
+/** \brief Get the number of hours worked by an employee
+ *
+ * \param horasTrabajadas int* : Pointer that will have the memory address of the hours worked of an employee
+ * \return int output : (-1) If there was an error (0) if the process was successful.
  */
 int employee_getHorasTrabajadas(Employee* this,int* horasTrabajadas)
 {
@@ -144,12 +130,10 @@ int employee_getHorasTrabajadas(Employee* this,int* horasTrabajadas)
 
 }
 
-/**
- * @fn
- * @brief 	Asigna un valor de tipo entero
- * @param
- * @param
- * @return (-1) Error (0) todo OK
+/** \brief Set a salary for an employee
+ *
+ * \param sueldo int : Salary which will be applied to an employee
+ * \return int output : (-1) If there was an error (0) if the process was successful.
  */
 int employee_setSueldo(Employee* this,int sueldo)
 {
@@ -163,12 +147,10 @@ int employee_setSueldo(Employee* this,int sueldo)
 
 }
 
-/**
- * @fn
- * @brief 	Devuelve por puntero un entero
- * @param
- * @param
- * @return (-1) Error (0) todo OK
+/** \brief Get an employee's salary
+ *
+ * \param sueldo int* : Pointer that will obtain the memory address of an employee's salary
+ * \return int output : (-1) If there was an error (0) if the process was successful.
  */
 int employee_getSueldo(Employee* this,int* sueldo)
 {
@@ -181,14 +163,12 @@ int employee_getSueldo(Employee* this,int* sueldo)
 	return output;
 
 }
-//--------get & set STR --------------------------------------------------------
 
-/**
- * @fn
- * @brief Asigna un id de tipo char a un empleado.
- * @param
- * @param
- * @return (-1) Error (0) todo OK
+
+/** \brief Set an id of type character to an employee
+ *
+ * \param id char* : Id which will set the employee
+ * \return int output : (-1) If there was an error (0) if the process was successful.
  */
 int employee_setIdStr(Employee* this, char* id)
 {
@@ -203,12 +183,10 @@ int employee_setIdStr(Employee* this, char* id)
 	return retornar;
 }
 
-/**
- * @fn
- * @brief Devuelve por puntero de tipo char el id de un empleado.
- * @param
- * @param
- * @return (-1) Error (0) todo OK
+/** \brief Returns the string id of an employee
+ *
+ * \param id char* : Pointer that will obtain the memory address of the employee's id.
+ * \return int output : (-1) If there was an error (0) if the process was successful.
  */
 int employee_getIdStr(Employee* this,char* id)
 {
@@ -222,14 +200,12 @@ int employee_getIdStr(Employee* this,char* id)
 	return output;
 }
 
-/**
- * @fn
- * @brief Asigna las horas trabajadas de tipo char a un empleado.
- * @param
- * @param
- * @return (-1) Error (0) todo OK
+/** \brief Set the number of hours worked
+ *
+ * \param horasTrabajadas char* : Amounts of hours worked
+ * \return int output : (-1) If there was an error (0) if the process was successful.
  */
-int employee_setHorasTrabajadasStr(Employee* this, char* horasTrabajadas)
+int employee_setHoursWorkedStr(Employee* this, char* horasTrabajadas)
 {
 	int output=-1;
 	char buffer[SIZE];
@@ -242,12 +218,10 @@ int employee_setHorasTrabajadasStr(Employee* this, char* horasTrabajadas)
 	return output;
 }
 
-/**
- * @fn
- * @brief Devuelve por puntero de tipo char las horas trabajadas de un empleado.
- * @param
- * @param
- * @return (-1) Error (0) todo OK
+/** \brief Gets the number of hours worked by a customer
+ *
+ * \param horasTrabajadas char* : Amounts of hours worked
+ * \return int output : (-1) If there was an error (0) if the process was successful.
  */
 int employee_getHorasTrabajadasStr(Employee* this,char* horasTrabajadas)
 {
@@ -260,14 +234,12 @@ int employee_getHorasTrabajadasStr(Employee* this,char* horasTrabajadas)
 	return output;
 }
 
-/**
- * @fn
- * @brief Asigna el sueldo de tipo char a un empleado.
- * @param
- * @param
- * @return (-1) Error (0) todo OK
+/** \brief Set an employee's salary
+ *
+ * \param sueldo char* : Amounts of salary
+ * \return int output : (-1) If there was an error (0) if the process was successful.
  */
-int employee_setSueldoStr(Employee* this, char* sueldo)
+int employee_setSalaryStr(Employee* this, char* sueldo)
 {
 	int output=-1;
 	char buffer[SIZE];
@@ -280,12 +252,10 @@ int employee_setSueldoStr(Employee* this, char* sueldo)
 	return output;
 }
 
-/**
- * @fn
- * @brief Devuelve por puntero de tipo char el sueldo de un empleado.
- * @param
- * @param
- * @return (-1) Error (0) todo OK
+/** \brief Get an employee's salary
+ *
+ * \param sueldo char* : Pointer that will obtain the memory address of an employee's salary
+ * \return int output : (-1) If there was an error (0) if the process was successful.
  */
 int employee_getSueldoStr(Employee* this,char* sueldo)
 {
@@ -298,14 +268,8 @@ int employee_getSueldoStr(Employee* this,char* sueldo)
 	return output;
 }
 
-//-----------------------------------------------------new's
-
-/**
- * @fn
- * @brief
- * @param
- * @param
- * @return (-1) Error (0) todo OK
+/** \brief Request memory to generate a new employee
+ *
  */
 Employee* employee_new()
 {
@@ -314,12 +278,8 @@ Employee* employee_new()
 	return this;
 }
 
-/**
- * @fn
- * @brief
- * @param
- * @param
- * @return (-1) Error (0) todo OK
+/** \brief Method to remove an employee.
+ * \param this Employee* : Employee being removed
  */
 void employee_delete(Employee* this)
 {
@@ -329,12 +289,13 @@ void employee_delete(Employee* this)
 	}
 }
 
-/**
- * @fn
- * @brief 					GUARDA EN CHAR*
- * @param
- * @param
- * @return (-1) Error (0) todo OK
+/** \brief Method to generate a new employee who will have all his data of type string.
+ *
+ * \param idStr char* : id that the new employee will be set
+ * \param nombreStr char* : name that the new employee will be set
+ * \param horasTrabajadasStr char* : worked hours that the new employee will be set
+ * \param sueldo char* : salary that the new employee will be set
+ * \return :  (NULL) If there was an error (this) if the process was successful.
  */
 Employee* employee_newParametros(char* idStr,char* nombreStr,char* horasTrabajadasStr, char* sueldo)
 {
@@ -343,8 +304,8 @@ Employee* employee_newParametros(char* idStr,char* nombreStr,char* horasTrabajad
 	{
 		if(  employee_setIdStr(this, idStr)!=-1 &&
 		     employee_setNombre(this, nombreStr)!=-1 &&
-			 employee_setHorasTrabajadasStr(this, horasTrabajadasStr)!=-1 &&
-			 employee_setSueldoStr(this, sueldo)!=-1)
+			 employee_setHoursWorkedStr(this, horasTrabajadasStr)!=-1 &&
+			 employee_setSalaryStr(this, sueldo)!=-1)
 		{
 			return this;
 		}
@@ -353,12 +314,13 @@ Employee* employee_newParametros(char* idStr,char* nombreStr,char* horasTrabajad
 	return NULL;
 }
 
-/**
- * @fn
- * @brief
- * @param
- * @param
- * @return (-1) Error (0) todo OK
+/** \brief Method to generate a new employee who will have all his data of type string.
+ *
+ * \param idStr char* : id that the new employee will be set
+ * \param nombreStr char* : name that the new employee will be set
+ * \param horasTrabajadasStr char* : worked hours that the new employee will be set
+ * \param sueldo char* : salary that the new employee will be set
+ * \return int output : (-1) If there was an error (0) if the process was successful.
  */
 int employee_print(Employee* this)
 {
@@ -383,14 +345,17 @@ int employee_print(Employee* this)
 	return output;
 }
 
-/**
- * @fn
- * @brief 						GUARDA EN INT
- * @param
- * @param
- * @return (-1) Error (0) todo OK
+
+
+/** \brief Method to generate a new employee.
+ *
+ * \param id int* : id that the new employee will be set
+ * \param name char* : name that the new employee will be set
+ * \param hours int : worked hours that the new employee will be set
+ * \param sueldo int : salary that the new employee will be set
+ * \return int output : (-1) If there was an error (0) if the process was successful.
  */
-Employee* employee_newParameters(int id,char* name,int hours, float salary)
+Employee* employee_newParameters(int id,char* name,int hours, int salary)
 {
 	Employee* this = employee_new();
 	if(this!=NULL)
@@ -407,12 +372,11 @@ Employee* employee_newParameters(int id,char* name,int hours, float salary)
 	return NULL;
 }
 
-/**
- * @fn
- * @brief
- * @param
- * @param
- * @return (-1) Error (0) todo OK
+/** \brief Alphabetical ordering method
+ *
+ * \param itemOne void* : argument on which it will be decided if one is greater than the other
+ * \param itemTwo void* : argument on which it will be decided if one is greater than the other
+ * \return int output : (1) If the first data is greater than the second (-1, 0) if the second data is greater than the first.
  */
 int employee_sort(void* itemOne,void* itemTwo)
 {
@@ -441,13 +405,54 @@ int employee_sort(void* itemOne,void* itemTwo)
 	}
 	else
 	{
-		printf("\nHubo un error en -> employee_sort(void* itemOne,void* itemTwo)");
+		printf("\nThere was a mistake -> employee_sort(void* itemOne,void* itemTwo)");
 	}
 
 	return output;
 }
 
 
+/** \brief ID ordering method
+ *
+ * \param itemOne void* : argument on which it will be decided if one is greater than the other
+ * \param itemTwo void* : argument on which it will be decided if one is greater than the other
+ * \return int output : (1) If the first data is greater than the second (-1, 0) if the second data is greater than the first.
+ */
+int employee_sortID(void* itemOne,void* itemTwo)
+{
+	int output=0;
+	Employee* buffer1;
+	Employee* buffer2;
+	int id1;
+	int id2;
+	buffer1	 = itemOne;
+	buffer2	 = itemTwo;
+
+	if(employee_getId(buffer1, &id1)==0   &&
+	   employee_getId(buffer2, &id2)==0	  )
+	{
+		if(id1>id2)
+			{
+			output= 1;
+			}
+			else
+			{
+				if(id1<id2)
+				{
+					output= -1;
+				}
+				else
+				{
+					output= 0;
+				}
+			}
+	}
+	else
+	{
+		printf("\nThere was a mistake-> employee_sort(void* itemOne,void* itemTwo)");
+	}
+	return output;
+}
 
 
 

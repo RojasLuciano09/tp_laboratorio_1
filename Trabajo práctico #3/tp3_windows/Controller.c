@@ -7,14 +7,16 @@
 #include <limits.h>
 #include "parser.h"
 
-/** \brief Recorre la lista en busca del id con maximo valor.
- * \param pArrayListEmployee LinkedList* lista sobre la cual se itera.
- * \return int : Devuelve el id con maximo valor.
+
+/** \brief Iterate the list in search of the id with the highest value
+ *
+ * \param pArrayListEmployee LinkedList* : list which is iterated
+ * \return int output : it will return the id with the highest value or (-1) If there was an error
  */
 int controller_searchMaxId(LinkedList* pArrayListEmployee)
 {
 	int output=-1;
-	int idAux;
+	int bufferId;
 	int idMax;
 	Employee* buffer;
 	int len = ll_len(pArrayListEmployee);
@@ -22,13 +24,13 @@ int controller_searchMaxId(LinkedList* pArrayListEmployee)
 	{
 		for(int i=0;i<len;i++)
 		{
-			buffer = ll_get(pArrayListEmployee, i); // recorro y obtengo por indice de -> i
-			if(employee_getId(buffer, &idAux)==0)
+			buffer = ll_get(pArrayListEmployee, i);
+			if(employee_getId(buffer, &bufferId)==0)
 			{
-				if(i==0 || idAux>idMax)
+				if(i==0 || bufferId>idMax)
 				{
-					idMax = idAux;
-					output = idMax;
+					idMax = bufferId;
+					output = idMax+1;
 				}
 			}
 		}
@@ -37,13 +39,12 @@ int controller_searchMaxId(LinkedList* pArrayListEmployee)
 	return output;
 }
 
-/** \brief Alta de empleados
+/** \brief Request for employee registration
  *
- * \param path char*
- * \param pArrayListEmployee LinkedList* : lista a la cual se agregara el empleado nuevo.
- * \return int output: (-1) Error (0) todo OK
+ * \param pArrayListEmployee LinkedList* : List to which an employee will be added.
+ * \return int output : (-1) If there was an error (0) if the process was successful.
  */
-int controller_addEmployee(LinkedList* pArrayListEmployee,int firstLoad)
+int controller_addEmployee(LinkedList* pArrayListEmployee)
 {
 	int output=-1;
 	char bufferName[LONG_NAME];
@@ -52,34 +53,34 @@ int controller_addEmployee(LinkedList* pArrayListEmployee,int firstLoad)
 	char bufferID[SIZE];
 
 	Employee* buffer;
-	if(pArrayListEmployee!=NULL)
+	if(pArrayListEmployee!=NULL  &&  !ll_isEmpty(pArrayListEmployee))
 	{
-		if(utn_getCadena("Ingrese nombre: ",ERROR,bufferName, ATTEMPTS, LONG_NAME)==0    &&
-		   utn_getCharInt("Ingrese horas: ",ERROR,bufferHours, ATTEMPTS, SIZE)==0 	 	 &&
-		   utn_getCharInt("Ingrese sueldo: ",ERROR,bufferSalary, ATTEMPTS, SIZE)==0  	 )
+		if(utn_getCadena("\nPlease write the name of the employee: ",ERROR,bufferName, ATTEMPTS, LONG_NAME)==0    &&
+		   utn_getCharInt("\nPlease enter the hours worked: ",ERROR,bufferHours, ATTEMPTS, SIZE)==0 	 	 &&
+		   utn_getCharInt("\nPlease enter salary: ",ERROR,bufferSalary, ATTEMPTS, SIZE)==0  	 )
 		{
 			sprintf(bufferID, "%d",controller_searchMaxId(pArrayListEmployee));
-			//sprintf(bufferID, "%d",newid(pArrayListEmployee,firstLoad)); // revisar que controller solo ejecute 1 vez
+			printf("\nYour id is: %s\n",bufferID);
 			buffer = employee_newParametros(bufferID, bufferName, bufferHours, bufferSalary);
 			ll_add(pArrayListEmployee,buffer);
-			printf("\nAlta de empleado exitosa. \n");
-
 		}
 		else
 		{
-			printf("\nError en -->>> controller_addEmployee ");
+			printf("\nThe operation couldn´t be completed at -> controller_addEmployee ");
 		}
 	}
-
+	else
+	{
+		printf("\nYou must first upload the employee list.\n ");
+	}
     return output;
 }
 
-/** \brief Carga los datos de los empleados desde el archivo data.csv (modo texto).
+/** \brief Loads employee data from data.csv file (text mode).
  *
- * \param path char*
- * \param pArrayListEmployee LinkedList*
- * \return int output: (-1) Error (0) todo OK
- *
+ * \param path char* : Path of the file to upload
+ * \param pArrayListEmployee LinkedList* : list to which the loaded data will belong
+ * \return int output : (-1) If there was an error (0) if the process was successful
  */
 int controller_loadFromText(char* path , LinkedList* pArrayListEmployee)
 {
@@ -90,23 +91,22 @@ int controller_loadFromText(char* path , LinkedList* pArrayListEmployee)
 		pFile = fopen(path, "r");
 		if(pFile!=NULL && !parser_EmployeeFromText(pFile, pArrayListEmployee))
 		{
-			printf("\nDatos cargados.\n");
+			printf("\nUploaded data.\n");
 			output=0;
 		}
 		else
 		{
-			printf("\nEl archivo no existe");
+			printf("\nThe file does not exists");
 		}
 	}
     return output;
 }
 
-/** \brief Carga los datos de los empleados desde el archivo data.csv (modo binario).
+/** \brief Loads employee data from data.csv file (binary mode).
  *
- * \param path char*
- * \param pArrayListEmployee LinkedList*
- * \return int output: (-1) Error (0) todo OK
- *
+ * \param path char* : Path of the file to upload
+ * \param pArrayListEmployee LinkedList* : list to which the loaded data will belong
+ * \return int output : (-1) If there was an error (0) if the process was successful
  */
 int controller_loadFromBinary(char* path , LinkedList* pArrayListEmployee)
 {
@@ -115,9 +115,10 @@ int controller_loadFromBinary(char* path , LinkedList* pArrayListEmployee)
 	if(path!=NULL && pArrayListEmployee!=NULL)
 	{
 		pFile = fopen(path, "rb");
-		if(pFile!=NULL && parser_EmployeeFromBinary(pFile, pArrayListEmployee)==0)
+		if(pFile!=NULL && !parser_EmployeeFromBinary(pFile, pArrayListEmployee))
+
 		{
-			printf("\nDatos cargados.\n");
+			printf("\nUploaded data.\n");
 			output=0;
 		}
 	}
@@ -125,17 +126,17 @@ int controller_loadFromBinary(char* path , LinkedList* pArrayListEmployee)
 }
 
 
-
-/** \brief : Recorre la lista en busqueda de un id, y devuelve por puntero su indice.
- *\param  int id : Id a buscar.
- * \param int *index : Puntero  que tendra el indice del ID.
- * \param pArrayListEmployee LinkedList* : lista en la cual se bucara el id
- * \return int output: (-1) Error (0) todo OK
+/**\brief It goes through the list in search of a specific id and returns its index
+ *
+ * \param pArrayListEmployee LinkedList* :  list in which the id will be searched
+ * \param id int : requested id
+ * \param index int* : Pointer that will have the memory address of the index obtained
+ * \return int output : (-1) If there was an error (0) if the process was successful.
  */
 int controller_findById(LinkedList* pArrayListEmployee,int id, int *index)
 {
 	int output=-1;
-	int idAux;
+	int bufferId;
 	int len = ll_len(pArrayListEmployee);
 	Employee* buffer;
 
@@ -143,8 +144,8 @@ int controller_findById(LinkedList* pArrayListEmployee,int id, int *index)
 	{
 		for(int i=0;i<len;i++)
 		{
-			buffer = ll_get(pArrayListEmployee, i); 			  // recorro y obtengo por indice de -> i
-			if(employee_getId(buffer,&idAux)==0 && idAux == id )  // si son iguales, obtengo el index
+			buffer = ll_get(pArrayListEmployee, i);
+			if(employee_getId(buffer,&bufferId)==0 && bufferId == id )
 			{
 				output=0;
 				*index = i;
@@ -155,62 +156,60 @@ int controller_findById(LinkedList* pArrayListEmployee,int id, int *index)
 	return output;
 }
 
-/** \brief Modificar datos de empleado
+/** \brief Modify employee data
  *
- * \param path char*
- * \param pArrayListEmployee LinkedList*
- * \return int
- *
+ * \param pArrayListEmployee LinkedList* : list of which an employee will be modified
+ * \return int output : (-1) If there was an error (0) if the process was successful.
  */
 int controller_editEmployee(LinkedList* pArrayListEmployee)
 {
 	int output=-1;
-	int idAux;
+	int bufferId;
 	int index;
 	int option;
-	char nombreAux[LONG_NAME];
-	char horasAux[SIZE];
-	char sueldoAux[SIZE];
+	char bufferName[LONG_NAME];
+	char bufferHours[SIZE];
+	char bufferSalary[SIZE];
 	Employee* buffer;
 
 	if(pArrayListEmployee!=NULL && !ll_isEmpty(pArrayListEmployee))
 	{
-		if(utn_getInt("\nIngrese el id a modificar: ",ERROR,&idAux,ATTEMPTS,-1,INT_MAX)==0  &&
-		   controller_findById(pArrayListEmployee, idAux, &index)==0 && index>-1		    ) //revisar index
+		if(utn_getInt("\nEnter the id of the employee to modify: ",ERROR,&bufferId,ATTEMPTS,-1,INT_MAX)==0  &&
+		   controller_findById(pArrayListEmployee, bufferId, &index)==0 && index>-1		    )
 		{
 			buffer = ll_get(pArrayListEmployee, index);
 			employee_print(buffer);
-			if(utn_getInt("\nCampo a modificar?: \n1)Nombre \n2)Horas \n3)Sueldo \n0)SALIR \n->:",ERROR,&option,ATTEMPTS,-1,3)==0)
+			if(utn_getInt("\nSelect the field to modify: \n1)Name \n2)Hours \n3)Salary \n0)EXIT \n>:",ERROR,&option,ATTEMPTS,-1,3)==0)
 			{
 				switch(option)
 				{
 				case 1:
-					if(utn_getString("\nIngrese el nuevo nombre: ",ERROR,nombreAux,ATTEMPTS,LONG_NAME)==0 &&
-					   employee_setNombre(buffer, nombreAux)==0 											)
+					if(utn_getString("\nEnter the new name: ",ERROR,bufferName,ATTEMPTS,LONG_NAME)==0 &&
+					   employee_setNombre(buffer, bufferName)==0 											)
 					{
 						ll_set(pArrayListEmployee, index, buffer);
 						output=0;
-						printf("\nDatos actualizados...\n");
+						printf("\nUpdated data...\n");
 					}
 				break;
 
 				case 2:
-					if(utn_getString("\nIngrese la nueva cantidad de horas: ",ERROR,horasAux,ATTEMPTS,LONG_NAME)==0   &&
-					   employee_setHorasTrabajadasStr(buffer, horasAux)==0                                            )
+					if(utn_getString("\nEnter the number of hours: ",ERROR,bufferHours,ATTEMPTS,LONG_NAME)==0   &&
+					   employee_setHoursWorkedStr(buffer, bufferHours)==0                                            )
 					{
 						ll_set(pArrayListEmployee, index, buffer);
 						output=0;
-						printf("\nDatos actualizados...\n");
+						printf("\nUpdated data...\n");
 					}
 				break;
 
 				case 3:
-					if(utn_getString("\nIngrese el nuevo sueldo: ",ERROR,sueldoAux,ATTEMPTS,LONG_NAME)==0 		&&
-					   employee_setSueldoStr(buffer,sueldoAux)==0  												)
+					if(utn_getString("\nEnter the new salary: ",ERROR,bufferSalary,ATTEMPTS,LONG_NAME)==0 		&&
+					   employee_setSalaryStr(buffer,bufferSalary)==0  												)
 					{
 						ll_set(pArrayListEmployee, index, buffer);
 						output=0;
-						printf("\nDatos actualizados...\n");
+						printf("\nUpdated data...\n");
 					}
 				break;
 				}
@@ -219,212 +218,208 @@ int controller_editEmployee(LinkedList* pArrayListEmployee)
 	}
 	else
 	{
-		printf("\nNo hay datos para editar...\n");
+		printf("\nNo data to edit...\n");
 	}
 	return output;
 }
 
-/** \brief Baja de empleado
+/** \brief Unsubscribe employee
  *
- * \param path char*
- * \param pArrayListEmployee LinkedList*
- * \return int
- *
+ * \param pArrayListEmployee LinkedList* : list from which an employee will be unsubscribe.
+ * \return int output : (-1) If there was an error (0) if the process was successful.
  */
 int controller_removeEmployee(LinkedList* pArrayListEmployee)
 {
 	int output=-1;
-	int idAux;
+	int bufferId;
 	int index;
 	int option;
 	Employee* buffer;
 
 	if(pArrayListEmployee!=NULL &&  !ll_isEmpty(pArrayListEmployee))
 	{
-		if(utn_getInt("\nIngrese el id a dar de baja: ",ERROR,&idAux,ATTEMPTS,-1,INT_MAX)==0  &&
-		   controller_findById(pArrayListEmployee, idAux, &index)==0 && index>-1		      ) //revisar index
+		if(utn_getInt("\nEnter the id to unsubscribe: ",ERROR,&bufferId,ATTEMPTS,-1,INT_MAX)==0  &&
+		   controller_findById(pArrayListEmployee, bufferId, &index)==0 && index>-1		      )
 		{
 			buffer = ll_get(pArrayListEmployee, index);
 			employee_print(buffer);
-			if(utn_getInt("\nPresione 1 para eliminar.\nPresione 2 para cancelar.\n->:",ERROR,&option,ATTEMPTS,1,2)==0 	   &&
+			if(utn_getInt("\nPress 1 to delete.\nPress 2 to cancel.\n->:",ERROR,&option,ATTEMPTS,1,2)==0 	   &&
 			   option==1																									)
 			{
 				ll_remove(pArrayListEmployee, index);
 				output=0;
-				printf("\nEmpleado eliminado...");
+				printf("\nEmployee removed...");
 			}else
 			{
-				printf("\nEliminacion cancelada, volviendo al menu principal..");
+				printf("\nDeletion canceled, returning to the main menu..");
 			}
 		}else
 		{
-			printf("\nNo se encontro el empleado con ese ID.");
+			printf("\nThe employee with that ID was not found.");
 		}
 	}
 	else
 	{
-		printf("\nNo hay datos para eliminar...\n");
+		printf("\nNo data to delete...\n");
 	}
 	return output;
 }
 
-/** \brief Listar empleados
+/** \brief Prints the employee data uploaded.
  *
- * \param path char*
- * \param pArrayListEmployee LinkedList*
- * \return int
- *
+ * \param pArrayListEmployee LinkedList* : List from which the data to be printed will be obtained
+ * \return int output : (-1) If there was an error (0) if the process was successful.
  */
 int controller_ListEmployee(LinkedList* pArrayListEmployee)
 {
 	int output=-1;
 	int len = ll_len(pArrayListEmployee);
 	Employee* buffer;
-	char nombreAux[SIZE];
-	char idAux[SIZE];
-	char horasAux[SIZE];
-	char sueldoAux[SIZE];
+	char bufferName[SIZE];
+	char bufferId[SIZE];
+	char bufferHours[SIZE];
+	char bufferSalary[SIZE];
 
 	if(pArrayListEmployee!=NULL &&  !ll_isEmpty(pArrayListEmployee))
 	{
-		printf("\nID     Nombre        Horas      Sueldo\n");
+		printf("\nID        Name          Hours      Salary\n");
 		for(int i=0; i<len;i++)
 		{
 			buffer = ll_get(pArrayListEmployee, i);
 			if(
-			employee_getNombre(buffer, nombreAux)==0				&&
-			employee_getIdStr(buffer, idAux)==0						&&
-			employee_getHorasTrabajadasStr(buffer, horasAux)==0 	&&
-			employee_getSueldoStr(buffer, sueldoAux)==0				)
+			employee_getNombre(buffer, bufferName)==0				&&
+			employee_getIdStr(buffer, bufferId)==0						&&
+			employee_getHorasTrabajadasStr(buffer, bufferHours)==0  &&
+			employee_getSueldoStr(buffer, bufferSalary)==0			 )
 			{
-			printf("%-6s %-10s  %5s %12s\n", idAux, nombreAux, horasAux, sueldoAux);
+			printf("%-9s %-10s  %5s %12s\n", bufferId, bufferName, bufferHours, bufferSalary);
 			output=0;
 			}
 		}
 	}
 	else
 	{
-		printf("\nNo hay datos para mostrar...\n");
+		printf("\nNo data to display...\n");
 	}
     return output;
 }
 
-/** \brief Ordenar empleados
+/** \brief Sort employees
  *
- * \param path char*
- * \param pArrayListEmployee LinkedList*
- * \return int
- *
+ * \param pArrayListEmployee LinkedList* : list which will be ordered
+ * \return int output : (-1) If there was an error (0) if the process was successful.
  */
 int controller_sortEmployee(LinkedList* pArrayListEmployee)
 {
 	int output=-1;
 	int op;
-	if(!ll_isEmpty(pArrayListEmployee) &&  utn_getInt("\nSeleccione el tipo de ordenamiento \n1-Desc \n0-Asc \n>:",ERROR,&op,ATTEMPTS,-1,1)==0 	  )
+	if(!ll_isEmpty(pArrayListEmployee) &&  utn_getInt("\nSelect sort order \n1-Desc \n0-Asc \n>:",ERROR,&op,ATTEMPTS,-1,1)==0)
 	{
 		ll_sort(pArrayListEmployee,employee_sort,op);
+		printf("\nData ordered alphabetically ...\n");
 		output=0;
 	}
 	else
 	{
-		printf("\nNo hay datos para ordenar..\n");
+		printf("\nNo data to sort..\n");
 	}
 return output;
 }
 
-/** \brief Guarda los datos de los empleados en el archivo data.csv (modo texto).
+/** \brief Save the employee data in the file data.csv (text mode).
  *
- * \param path char*
- * \param pArrayListEmployee LinkedList*
- * \return int
- *
+ * \param path char* : Path where the file will be stored
+ * \param pArrayListEmployee LinkedList* : List from which the data to be saved will be obtained.
+ * \return int output : (-1) If there was an error (0) if the process was successful.
  */
 int controller_saveAsText(char* path , LinkedList* pArrayListEmployee)
 {
 	int output=-1;
-	char nombreAux[SIZE];
-	char idAux[SIZE];
-	char horasAux[SIZE];
-	char sueldoAux[SIZE];
+	char bufferName[SIZE];
+	char bufferId[SIZE];
+	char bufferHours[SIZE];
+	char bufferSalary[SIZE];
 	int len = ll_len(pArrayListEmployee);
 	FILE* pFile;
 	Employee* buffer;
 
-	if(path!=NULL && pArrayListEmployee!=NULL &&  !ll_isEmpty(pArrayListEmployee))
+	if(path!=NULL && pArrayListEmployee!=NULL && ll_len(pArrayListEmployee)>0)
 		{
 			pFile = fopen(path, "w");
 			if(pFile!=NULL)
 			{
+				ll_sort(pArrayListEmployee,employee_sortID,1);
 				for(int i=0;i<len;i++)
 				{
 					buffer = ll_get(pArrayListEmployee, i);
-					if( employee_getNombre(buffer, nombreAux)==0			    &&
-						employee_getIdStr(buffer, idAux)==0						&&
-						employee_getHorasTrabajadasStr(buffer, horasAux)==0   	&&
-						employee_getSueldoStr(buffer, sueldoAux)==0			 ) 				   //obtengo los datos.
+					if( employee_getNombre(buffer, bufferName)==0			    	&&
+						employee_getIdStr(buffer, bufferId)==0						&&
+						employee_getHorasTrabajadasStr(buffer, bufferHours)==0   	&&
+						employee_getSueldoStr(buffer, bufferSalary)==0			 	)
 					{
-						fprintf(pFile, "%s,%s,%s,%s\n",idAux, nombreAux, horasAux, sueldoAux); //los guardo.
+						fprintf(pFile, "%s,%s,%s,%s\n",bufferId, bufferName, bufferHours, bufferSalary);
 						output=0;
 					}
 				}
-				fclose(pFile); 																   //mucho muy importante.
+				fclose(pFile);
+				printf("\nData saved successfully.\n");
 			}
 		}
 		else
 		{
-			printf("\nNo hay datos para guardar...\n");
+			printf("\nNo data to save...\n");
 		}
 	return output;
 }
 
-/** \brief Guarda los datos de los empleados en el archivo data.csv (modo binario).
+/** \brief Save the employee data in the data.csv file (binary mode).
  *
- * \param path char*
- * \param pArrayListEmployee LinkedList*
- * \return int
+ * \param path char* : Path where the file will be stored
+ * \param pArrayListEmployee LinkedList* : List from which the data to be saved will be obtained.
+ * \return int output : (-1) If there was an error (0) if the process was successful.
  */
 int controller_saveAsBinary(char* path , LinkedList* pArrayListEmployee)
 {
 	int output=-1;
-	char nombreAux[LONG_NAME];
-	int idAux;
-	int horasAux;
-	int sueldoAux;
+	char bufferName[LONG_NAME];
+	int bufferId;
+	int bufferHours;
+	int bufferSalary;
 	int len = ll_len(pArrayListEmployee);
 	FILE* pFile;
 	Employee* buffer;
 
 	if(path!=NULL && pArrayListEmployee!=NULL  &&  !ll_isEmpty(pArrayListEmployee))
 		{
-			pFile = fopen(path, "wb");														//escribir en binario
+			pFile = fopen(path, "wb");
 			if(pFile!=NULL)
 			{
+				ll_sort(pArrayListEmployee,employee_sortID,1);
 				for(int i=0;i<len;i++)
 				{
 					buffer = ll_get(pArrayListEmployee, i);
-					if( employee_getNombre(buffer, nombreAux)==0			    &&
-						employee_getId(buffer, &idAux)==0						&&
-						employee_getHorasTrabajadas(buffer, &horasAux)==0   	&&
-						employee_getSueldo(buffer, &sueldoAux)==0			     ) 		    //obtengo los datos.
+					if( employee_getNombre(buffer, bufferName)==0			    	&&
+						employee_getId(buffer, &bufferId)==0						&&
+						employee_getHorasTrabajadas(buffer, &bufferHours)==0   		&&
+						employee_getSueldo(buffer, &bufferSalary)==0			     )
 					{
-						fwrite(&idAux,sizeof(int),1,pFile);
-						fwrite(nombreAux, LONG_NAME,1,pFile);
-						fwrite(&horasAux,sizeof(int),1,pFile);								//los guardo xd
-						fwrite(&sueldoAux,sizeof(int),1,pFile);
+						fwrite(&bufferId,sizeof(int),1,pFile);
+						fwrite(bufferName, LONG_NAME,1,pFile);
+						fwrite(&bufferHours,sizeof(int),1,pFile);
+						fwrite(&bufferSalary,sizeof(int),1,pFile);
 						output=0;
 					}
 				}
-				fclose(pFile); 																//mucho muy importante
+				fclose(pFile);
+				printf("\nData saved successfully.\n");
 			}
 		}
 		else
 		{
-			printf("\nNo hay datos para guardar...\n");
+			printf("\nNo data to save...\n");
 		}
     return output;
 }
-
-
 
 
 

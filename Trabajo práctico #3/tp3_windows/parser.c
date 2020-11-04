@@ -3,32 +3,32 @@
 #include "LinkedList.h"
 #include "Employee.h"
 
-/* \brief Parsea los datos los datos de los empleados desde el archivo data.csv (modo binario).
+
+/* \brief Parse the employee data from the data.csv file (binary mode).
  *
- * \param path char*
- * \param pArrayListEmployee LinkedList*
- * \return int
- *
+ * \param pFile FILE* :  File from which the data will be obtained.
+ * \param pArrayListEmployee LinkedList* : List in which the obtained data will be stored
+ * \return int output : (-1) If there was an error (0) if the process was successful.
  */
 int parser_EmployeeFromBinary(FILE* pFile , LinkedList* pArrayListEmployee)
 {
 	int output=-1;
-	char nombreAux[LONG_NAME];
-	int idAux;
-	int horasAux;
-	int sueldoAux;
+	char bufferName[LONG_NAME];
+	int bufferId;
+	int bufferHours;
+	int bufferSalary;
 
 	Employee* buffer;
 	if(pFile!=NULL && pArrayListEmployee!=NULL)
 	{
 		do
-		{	//puedo poner un flag para evitar el primer renglon.
-			if( fread(&idAux,sizeof(int),1,pFile)==1 				  &&
-				fread(nombreAux, LONG_NAME, 1, pFile)==1	  		  &&
-				fread(&horasAux,sizeof(int), 1, pFile)==1 			  &&
-				fread(&sueldoAux,sizeof(int),1,pFile)				   )
+		{
+			if( fread(&bufferId,sizeof(int),1,pFile)==1 				  &&
+				fread(bufferName, LONG_NAME, 1, pFile)==1	  		  &&
+				fread(&bufferHours,sizeof(int), 1, pFile)==1 			  &&
+				fread(&bufferSalary,sizeof(int),1,pFile)				   )
 			{
-				buffer = employee_newParameters(idAux, nombreAux, horasAux, sueldoAux);
+				buffer = employee_newParameters(bufferId, bufferName, bufferHours, bufferSalary);
 				ll_add(pArrayListEmployee, buffer);
 				output=0;
 			}
@@ -39,69 +39,42 @@ int parser_EmployeeFromBinary(FILE* pFile , LinkedList* pArrayListEmployee)
 	return output;
 }
 
-/** \brief Parsea los datos los datos de los empleados desde el archivo data.csv (modo texto).
+/** \brief Parse the employee data from the data.csv file (text mode).
  *
- * \param path char*
- * \param pArrayListEmployee LinkedList*
- * \return int
- *
+ * \param pFile FILE* :  File from which the data will be obtained.
+ * \param pArrayListEmployee LinkedList* : List in which the obtained data will be stored
+ * \return int output : (-1) If there was an error (0) if the process was successful.
  */
 int parser_EmployeeFromText(FILE* pFile , LinkedList* pArrayListEmployee)
 {
 	int output=-1;
-	char idAux[SIZE];
-	char nombreAux[SIZE];
-	char horasAux[SIZE];
-	char sueldoAux[SIZE];
+	char bufferId[SIZE];
+	char bufferName[SIZE];
+	char bufferHours[SIZE];
+	char bufferSalary[SIZE];
 	Employee* bufferEmp;
 	int read;
-	int flagFirstLine=0;
 
 	if(pFile!=NULL && pArrayListEmployee!=NULL)
 	{
 		do
 		{
-			read = fscanf(pFile, "%[^,],%[^,],%[^,],%[^\n]\n",idAux,nombreAux,horasAux,sueldoAux);
-			if (flagFirstLine == 0)
-			{
-				flagFirstLine = 1;
-			}
-			else
-			{
+			read = fscanf(pFile, "%[^,],%[^,],%[^,],%[^\n]\n",bufferId,bufferName,bufferHours,bufferSalary);
+
 				if(read==4)
 				{
-					bufferEmp = employee_newParametros(idAux, nombreAux, horasAux, sueldoAux);
+					bufferEmp = employee_newParametros(bufferId, bufferName, bufferHours, bufferSalary);
 					ll_add(pArrayListEmployee, bufferEmp);
 					output=0;
 				}
 				else
 				{
-					printf("El archivo esta corrupto");
+					printf("\nThe file is corrupt\n");
 					break;
 				}
-			}
+
 		}while(!feof(pFile));
 		fclose(pFile);
 	}
     return output;
 }
-/*
-
- 	if(pFile!=NULL && pArrayListEmployee!=NULL)
-	{
-		do
-		{  //puedo poner un flag para evitar el primer renglon.
-			if(fscanf(pFile, "%[^,],%[^,],%[^,],%[^\n]\n",idAux,nombreAux,horasAux,sueldoAux)==4)
-			{
-				bufferEmp = employee_newParametros(idAux, nombreAux, horasAux, sueldoAux);
-				ll_add(pArrayListEmployee, bufferEmp);
-				output=0;
-			}
-		}while(feof(pFile)==0);
-		fclose(pFile);
-	}
-    return output;
-
-
-
- */

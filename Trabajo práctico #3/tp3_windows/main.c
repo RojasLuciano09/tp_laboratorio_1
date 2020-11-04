@@ -23,11 +23,11 @@ int main(void)
 {
 	setbuf(stdout, NULL);
     int option = 0;
-
     LinkedList* listaEmpleados = ll_newLinkedList();
 
+    printf("\nWelcome to the employee management system.\n");
     do{
-    	utn_getMenu(&option, ATTEMPTS, -1, 11);
+    	utn_getMenu(&option, ATTEMPTS, 1, 10);
 
         switch(option)
         {
@@ -66,6 +66,7 @@ int main(void)
             case 9:
             	controller_saveAsBinary("dataBinario.csv",listaEmpleados);
                 break;
+
 
         }
     }while(option != 10);
