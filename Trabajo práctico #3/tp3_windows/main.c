@@ -106,6 +106,7 @@ int main(void)
 
         }
     }while(option != 10);
+    ll_deleteLinkedList(listaEmpleados);
     printf("\nExit");
     return 0;
 }
