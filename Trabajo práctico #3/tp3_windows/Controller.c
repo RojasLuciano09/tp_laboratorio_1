@@ -7,6 +7,66 @@
 #include <limits.h>
 #include "parser.h"
 
+int checkIfThereAListBefore(int flag)
+{
+	int firstFlag;
+	int secondFlag;
+
+	if(flag ==1)
+	{
+		firstFlag= flag;
+		secondFlag =firstFlag;
+	}
+	return  secondFlag;
+}
+
+/** \brief Loads employee data from data.csv file (text mode).
+ *
+ * \param path char* : Path of the file to upload
+ * \param pArrayListEmployee LinkedList* : list to which the loaded data will belong
+ * \return int output : (-1) If there was an error (0) if the process was successful
+ */
+int controller_loadFromText(char* path , LinkedList* pArrayListEmployee)
+{
+	int output=-1;
+	FILE* pFile;
+
+	if(path!=NULL && pArrayListEmployee!=NULL)
+	{
+		pFile = fopen(path, "r");
+		if(pFile!=NULL && !parser_EmployeeFromText(pFile, pArrayListEmployee))
+		{
+			output=0;
+		}
+		else
+		{
+			printf("\nThe file does not exists");
+		}
+	}
+    return output;
+}
+
+/** \brief Loads employee data from data.csv file (binary mode).
+ *
+ * \param path char* : Path of the file to upload
+ * \param pArrayListEmployee LinkedList* : list to which the loaded data will belong
+ * \return int output : (-1) If there was an error (0) if the process was successful
+ */
+int controller_loadFromBinary(char* path , LinkedList* pArrayListEmployee)
+{
+	int output=-1;
+	FILE* pFile;
+	if(path!=NULL && pArrayListEmployee!=NULL)
+	{
+		pFile = fopen(path, "rb");
+		if(pFile!=NULL && !parser_EmployeeFromBinary(pFile, pArrayListEmployee))
+
+		{
+			output=0;
+		}
+	}
+	return output;
+}
 
 /** \brief Iterate the list in search of the id with the highest value
  *
@@ -75,56 +135,6 @@ int controller_addEmployee(LinkedList* pArrayListEmployee)
 	}
     return output;
 }
-
-/** \brief Loads employee data from data.csv file (text mode).
- *
- * \param path char* : Path of the file to upload
- * \param pArrayListEmployee LinkedList* : list to which the loaded data will belong
- * \return int output : (-1) If there was an error (0) if the process was successful
- */
-int controller_loadFromText(char* path , LinkedList* pArrayListEmployee)
-{
-	int output=-1;
-	FILE* pFile;
-	if(path!=NULL && pArrayListEmployee!=NULL)
-	{
-		pFile = fopen(path, "r");
-		if(pFile!=NULL && !parser_EmployeeFromText(pFile, pArrayListEmployee))
-		{
-			printf("\nUploaded data.\n");
-			output=0;
-		}
-		else
-		{
-			printf("\nThe file does not exists");
-		}
-	}
-    return output;
-}
-
-/** \brief Loads employee data from data.csv file (binary mode).
- *
- * \param path char* : Path of the file to upload
- * \param pArrayListEmployee LinkedList* : list to which the loaded data will belong
- * \return int output : (-1) If there was an error (0) if the process was successful
- */
-int controller_loadFromBinary(char* path , LinkedList* pArrayListEmployee)
-{
-	int output=-1;
-	FILE* pFile;
-	if(path!=NULL && pArrayListEmployee!=NULL)
-	{
-		pFile = fopen(path, "rb");
-		if(pFile!=NULL && !parser_EmployeeFromBinary(pFile, pArrayListEmployee))
-
-		{
-			printf("\nUploaded data.\n");
-			output=0;
-		}
-	}
-	return output;
-}
-
 
 /**\brief It goes through the list in search of a specific id and returns its index
  *
@@ -282,7 +292,7 @@ int controller_ListEmployee(LinkedList* pArrayListEmployee)
 
 	if(pArrayListEmployee!=NULL &&  !ll_isEmpty(pArrayListEmployee))
 	{
-		printf("\nID        Name          Hours      Salary\n");
+		printf("\nID       Name                 Hours      Salary\n");
 		for(int i=0; i<len;i++)
 		{
 			buffer = ll_get(pArrayListEmployee, i);
@@ -292,7 +302,7 @@ int controller_ListEmployee(LinkedList* pArrayListEmployee)
 			employee_getHorasTrabajadasStr(buffer, bufferHours)==0  &&
 			employee_getSueldoStr(buffer, bufferSalary)==0			 )
 			{
-			printf("%-9s %-10s  %5s %12s\n", bufferId, bufferName, bufferHours, bufferSalary);
+			printf("%-8s %-15s %8s %12s\n", bufferId, bufferName, bufferHours, bufferSalary);
 			output=0;
 			}
 		}

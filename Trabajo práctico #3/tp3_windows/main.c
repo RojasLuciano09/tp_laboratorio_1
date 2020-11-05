@@ -23,20 +23,56 @@ int main(void)
 {
 	setbuf(stdout, NULL);
     int option = 0;
+    int loadFlag=0;
+    int optionFlag;
     LinkedList* listaEmpleados = ll_newLinkedList();
 
-    printf("\nWelcome to the employee management system.\n");
+    printf("\nBienvenido al sistema de gestión de empleados.\n");
     do{
     	utn_getMenu(&option, ATTEMPTS, 1, 10);
 
         switch(option)
         {
             case 1:
-                controller_loadFromText("data.csv",listaEmpleados);
+
+                if(loadFlag==0 && controller_loadFromText("data.csv",listaEmpleados)==0)
+                {
+                	printf("\nDatos cargados.\n");
+                	loadFlag=1;
+                }
+                else
+                {
+                	if(utn_getInt("\nLa lista ya existe, sobrescribir?: \n1-Si\n2-No \n>",ERROR,&optionFlag,ATTEMPTS,1,2) &&
+                		optionFlag==1 && controller_loadFromText("data.csv",listaEmpleados)==0	)
+                	{
+                		printf("\nDatos cargados.\n");
+                	}
+                	else
+                	{
+                		printf("\nNo hay datos cargados.\n");
+                	}
+                }
                 break;
 
             case 2:
-            	controller_loadFromBinary("dataBinario.csv",listaEmpleados);
+
+                if(loadFlag==0 && controller_loadFromBinary("dataBinario.csv",listaEmpleados)==0)
+                {
+                	printf("\nDatos cargados.\n");
+                	loadFlag=1;
+                }
+                else
+                {
+                	if(utn_getInt("\nLa lista ya existe, sobrescribir?: \n1-Si\n2-No \n>",ERROR,&optionFlag,ATTEMPTS,1,2) &&
+                		optionFlag==1 && controller_loadFromBinary("dataBinario.csv",listaEmpleados)==0	)
+                	{
+                		printf("\nDatos cargados.\n");
+                	}
+                	else
+                	{
+                		printf("\nNo hay datos cargados.\n");
+                	}
+                }
                 break;
 
             case 3:

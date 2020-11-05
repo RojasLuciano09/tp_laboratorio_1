@@ -24,7 +24,7 @@ int parser_EmployeeFromBinary(FILE* pFile , LinkedList* pArrayListEmployee)
 		do
 		{
 			if( fread(&bufferId,sizeof(int),1,pFile)==1 				  &&
-				fread(bufferName, LONG_NAME, 1, pFile)==1	  		  &&
+				fread(bufferName, LONG_NAME, 1, pFile)==1	  		  		&&
 				fread(&bufferHours,sizeof(int), 1, pFile)==1 			  &&
 				fread(&bufferSalary,sizeof(int),1,pFile)				   )
 			{
@@ -35,7 +35,6 @@ int parser_EmployeeFromBinary(FILE* pFile , LinkedList* pArrayListEmployee)
 		}while(feof(pFile)==0);
 		fclose(pFile);
 	}
-
 	return output;
 }
 
@@ -53,26 +52,23 @@ int parser_EmployeeFromText(FILE* pFile , LinkedList* pArrayListEmployee)
 	char bufferHours[SIZE];
 	char bufferSalary[SIZE];
 	Employee* bufferEmp;
-	int read;
 
 	if(pFile!=NULL && pArrayListEmployee!=NULL)
 	{
 		do
 		{
-			read = fscanf(pFile, "%[^,],%[^,],%[^,],%[^\n]\n",bufferId,bufferName,bufferHours,bufferSalary);
-
-				if(read==4)
-				{
-					bufferEmp = employee_newParametros(bufferId, bufferName, bufferHours, bufferSalary);
-					ll_add(pArrayListEmployee, bufferEmp);
-					output=0;
-				}
-				else
-				{
-					printf("\nThe file is corrupt\n");
-					break;
-				}
-
+			//if(fscanf(pFile, "%[^,],%[^,],%[^,],%[^\n]\n",bufferId,bufferName,bufferHours,bufferSalary)==4)
+			if(fscanf(pFile, "%[^,],%[^,],%[^,],%[^\n]\n",bufferId,bufferName,bufferHours,bufferSalary)==4)
+			{
+				bufferEmp = employee_newParametros(bufferId, bufferName, bufferHours, bufferSalary);
+				ll_add(pArrayListEmployee, bufferEmp);
+				output=0;
+			}
+			else
+			{
+				printf("\nThe file is corrupt\n");
+				break;
+			}
 		}while(!feof(pFile));
 		fclose(pFile);
 	}

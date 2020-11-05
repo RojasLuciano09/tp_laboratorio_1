@@ -41,7 +41,7 @@ int isString(char string[])
 	{
 		for(int i = 0;string[i] != '\0'; i++)
 		{
-			if((string[i] < 'a' || string[i] > 'z') && (string[i] < 'A' || string[i] > 'Z') && string[i] != 32)
+			if((string[i] < 'a' || string[i] > 'z') && (string[i] < 'A' || string[i] > 'Z') && string[i]!=45 && string[i] != 32)
 			{
 				output = 0;
 				break;
@@ -50,11 +50,6 @@ int isString(char string[])
 	}
 	return output;
 }
-
-
-
-
-
 
 static int isFloat(char string[])
 {
@@ -79,7 +74,6 @@ static int isFloat(char string[])
 	}
 	return output;
 }
-
 
 int isInt(char string[])
 {
@@ -157,8 +151,6 @@ int utn_getCharInt(char msg[],char msrError[],char pResult[],int attempts,int li
 	}
 	return retorno;
 }
-
-
 
 int utn_getInt(char msg[], char msgError[], int *pResult, int attemps, int min, int max)
 {
@@ -260,7 +252,6 @@ int utn_getMenu(int *pResult, int attemps, int min, int max)
 					printf("\nError! elija una opcion valida");
 					attemps--;
 				}
-
 			}
 			else
 			{
@@ -306,7 +297,6 @@ int esLetrasYEspacios(char* cadena, int len)
 	}
 	return retorno;
 }
-
 
 int utn_getCadena(char* pMensaje, char* pMensajeError, char* pResultado, int reintentos, int limite)
 {
