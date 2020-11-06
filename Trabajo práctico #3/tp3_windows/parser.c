@@ -51,35 +51,23 @@ int parser_EmployeeFromText(FILE* pFile , LinkedList* pArrayListEmployee)
 	char bufferName[SIZE];
 	char bufferHours[SIZE];
 	char bufferSalary[SIZE];
-	int read;
-	int flagFirstLine=0;
 	Employee* bufferEmp;
-
 	if(pFile!=NULL && pArrayListEmployee!=NULL)
 	{
+		ll_clear(pArrayListEmployee);
 		do
 		{
-			read =fscanf(pFile, "%[^,],%[^,],%[^,],%[^\n]\n",bufferId,bufferName,bufferHours,bufferSalary);
-			if(flagFirstLine ==0)
+			if(fscanf(pFile, "%[^,],%[^,],%[^,],%[^\n]\n",bufferId,bufferName,bufferHours,bufferSalary)==4)
 			{
-				flagFirstLine =1;
+				bufferEmp = employee_newParametros(bufferId, bufferName, bufferHours, bufferSalary);
+				ll_add(pArrayListEmployee, bufferEmp);
+				output=0;
 			}
 			else
 			{
-				if(read==4)
-				{
-					bufferEmp = employee_newParametros(bufferId, bufferName, bufferHours, bufferSalary);
-					ll_add(pArrayListEmployee, bufferEmp);
-					output=0;
-				}
-				else
-				{
-					printf("\nThe file is corrupt\n");
-					break;
-				}
+				employee_delete(bufferEmp);
 			}
-		}while(!feof(pFile));
-		fclose(pFile);
+		}while(feof(pFile)==0);
 	}
     return output;
 }

@@ -307,7 +307,7 @@ int controller_sortEmployee(LinkedList* pArrayListEmployee)
 {
 	int output=-1;
 	int op;
-	if(!ll_isEmpty(pArrayListEmployee) &&  utn_getInt("\nSelect sort order \n1-Desc \n0-Asc \n>:",ERROR,&op,ATTEMPTS,-1,1)==0)
+	if(pArrayListEmployee!=NULL && !ll_isEmpty(pArrayListEmployee) &&  utn_getInt("\nSelect sort order \n1-Desc \n0-Asc \n>:",ERROR,&op,ATTEMPTS,-1,1)==0)
 	{
 		printf("\nWork in progress..\n");
 		ll_sort(pArrayListEmployee,employee_sort,op);

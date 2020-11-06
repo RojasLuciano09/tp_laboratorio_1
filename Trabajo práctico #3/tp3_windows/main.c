@@ -22,10 +22,15 @@
 int main(void)
 {
 	setbuf(stdout, NULL);
+	 LinkedList* listaEmpleados = ll_newLinkedList();
+
+
+
+
     int option;
     int loadFlag=0;
     int optionFlag;
-    LinkedList* listaEmpleados = ll_newLinkedList();
+
 
     printf("\nBienvenido al sistema de gestión de empleados.\n");
     do{

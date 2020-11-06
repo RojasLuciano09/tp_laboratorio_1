@@ -391,6 +391,7 @@ int employee_sort(void* itemOne,void* itemTwo)
 	char name_2[LONG_NAME];
 
 
+
 	if(employee_getNombre(buffer1, name_1)==0   &&
 	   employee_getNombre(buffer2, name_2)==0	)
 	{
