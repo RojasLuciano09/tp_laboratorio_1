@@ -7,18 +7,6 @@
 #include <limits.h>
 #include "parser.h"
 
-int checkIfThereAListBefore(int flag)
-{
-	int firstFlag;
-	int secondFlag;
-
-	if(flag ==1)
-	{
-		firstFlag= flag;
-		secondFlag =firstFlag;
-	}
-	return  secondFlag;
-}
 
 /** \brief Loads employee data from data.csv file (text mode).
  *
@@ -60,7 +48,6 @@ int controller_loadFromBinary(char* path , LinkedList* pArrayListEmployee)
 	{
 		pFile = fopen(path, "rb");
 		if(pFile!=NULL && !parser_EmployeeFromBinary(pFile, pArrayListEmployee))
-
 		{
 			output=0;
 		}
@@ -75,28 +62,25 @@ int controller_loadFromBinary(char* path , LinkedList* pArrayListEmployee)
  */
 int controller_searchMaxId(LinkedList* pArrayListEmployee)
 {
-	int output=-1;
-	int bufferId;
-	int idMax;
-	Employee* buffer;
+	int retornar=-1;
 	int len = ll_len(pArrayListEmployee);
+	Employee* bufferEmp;
+	int id;
+	int maxId;
 	if(pArrayListEmployee!=NULL)
 	{
 		for(int i=0;i<len;i++)
 		{
-			buffer = ll_get(pArrayListEmployee, i);
-			if(employee_getId(buffer, &bufferId)==0)
+			bufferEmp = ll_get(pArrayListEmployee, i);
+			employee_getId(bufferEmp, &id);
+			if(i==0 || id>maxId)
 			{
-				if(i==0 || bufferId>idMax)
-				{
-					idMax = bufferId;
-					output = idMax+1;
-				}
+				maxId = id;
+				retornar = maxId+1;
 			}
 		}
-
 	}
-	return output;
+	return retornar;
 }
 
 /** \brief Request for employee registration
@@ -325,6 +309,7 @@ int controller_sortEmployee(LinkedList* pArrayListEmployee)
 	int op;
 	if(!ll_isEmpty(pArrayListEmployee) &&  utn_getInt("\nSelect sort order \n1-Desc \n0-Asc \n>:",ERROR,&op,ATTEMPTS,-1,1)==0)
 	{
+		printf("\nWork in progress..\n");
 		ll_sort(pArrayListEmployee,employee_sort,op);
 		printf("\nData ordered alphabetically ...\n");
 		output=0;
@@ -358,6 +343,7 @@ int controller_saveAsText(char* path , LinkedList* pArrayListEmployee)
 			pFile = fopen(path, "w");
 			if(pFile!=NULL)
 			{
+				printf("\nWork in progress..\n");
 				ll_sort(pArrayListEmployee,employee_sortID,1);
 				for(int i=0;i<len;i++)
 				{

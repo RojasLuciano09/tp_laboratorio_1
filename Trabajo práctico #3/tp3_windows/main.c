@@ -22,7 +22,7 @@
 int main(void)
 {
 	setbuf(stdout, NULL);
-    int option = 0;
+    int option;
     int loadFlag=0;
     int optionFlag;
     LinkedList* listaEmpleados = ll_newLinkedList();
@@ -42,7 +42,7 @@ int main(void)
                 }
                 else
                 {
-                	if(utn_getInt("\nLa lista ya existe, sobrescribir?: \n1-Si\n2-No \n>",ERROR,&optionFlag,ATTEMPTS,1,2) &&
+                	if(utn_getInt("\nLa lista ya existe, sobrescribir?: \n1-Si\n2-No \n>",ERROR,&optionFlag,ATTEMPTS,1,2)==0 &&
                 		optionFlag==1 && controller_loadFromText("data.csv",listaEmpleados)==0	)
                 	{
                 		printf("\nDatos cargados.\n");
@@ -56,14 +56,14 @@ int main(void)
 
             case 2:
 
-                if(loadFlag==0 && controller_loadFromBinary("dataBinario.bin",listaEmpleados)==0)
+                if(loadFlag==0 && !controller_loadFromBinary("dataBinario.bin",listaEmpleados))
                 {
                 	printf("\nDatos cargados.\n");
                 	loadFlag=1;
                 }
                 else
                 {
-                	if(utn_getInt("\nLa lista ya existe, sobrescribir?: \n1-Si\n2-No \n>",ERROR,&optionFlag,ATTEMPTS,1,2) &&
+                	if(utn_getInt("\nLa lista ya existe, sobrescribir?: \n1-Si\n2-No \n>",ERROR,&optionFlag,ATTEMPTS,1,2)==0 &&
                 		optionFlag==1 && controller_loadFromBinary("dataBinario.bin",listaEmpleados)==0	)
                 	{
                 		printf("\nDatos cargados.\n");
@@ -100,7 +100,7 @@ int main(void)
                 break;
 
             case 9:
-            	controller_saveAsBinary("dataBinario.csv",listaEmpleados);
+            	controller_saveAsBinary("dataBinario.bin",listaEmpleados);
                 break;
 
 
