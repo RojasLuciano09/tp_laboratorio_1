@@ -56,7 +56,7 @@ int main(void)
 
             case 2:
 
-                if(loadFlag==0 && controller_loadFromBinary("dataBinario.csv",listaEmpleados)==0)
+                if(loadFlag==0 && controller_loadFromBinary("dataBinario.bin",listaEmpleados)==0)
                 {
                 	printf("\nDatos cargados.\n");
                 	loadFlag=1;
@@ -64,7 +64,7 @@ int main(void)
                 else
                 {
                 	if(utn_getInt("\nLa lista ya existe, sobrescribir?: \n1-Si\n2-No \n>",ERROR,&optionFlag,ATTEMPTS,1,2) &&
-                		optionFlag==1 && controller_loadFromBinary("dataBinario.csv",listaEmpleados)==0	)
+                		optionFlag==1 && controller_loadFromBinary("dataBinario.bin",listaEmpleados)==0	)
                 	{
                 		printf("\nDatos cargados.\n");
                 	}
