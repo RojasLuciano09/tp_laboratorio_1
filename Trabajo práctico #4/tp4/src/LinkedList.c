@@ -120,7 +120,7 @@ static int addNode(LinkedList* this, int nodeIndex,void* pElement)
                         else																//quiero agregar nodo en otra posicion
                         {
                                 pPreviousNode = getNode(this, nodeIndex-1);					//obtengo el previo
-                                pNewNode->pNextNode = NULL;									// el nuevo apunta al siguiente del previo.
+                                pNewNode->pNextNode = pPreviousNode->pNextNode;				// el nuevo apunta al siguiente del previo.
                                 pPreviousNode->pNextNode = pNewNode;						// el siguiente del previo va a ser el nuevo.
                         }
                         this->size++;
