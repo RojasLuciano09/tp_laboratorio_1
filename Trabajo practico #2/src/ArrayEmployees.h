@@ -24,7 +24,7 @@ int isEmpty;
 }typedef Employee;
 
 int initEmployees(Employee* EmployeList, int limite);
-int addToList(Employee list[],int len,int id,char name[],char lastName[],float salary,int sector,int index);
+int AddEmployees(Employee list[],int len,int id,char name[],char lastName[],float salary,int sector,int index);
 int findEmployeeById(Employee* EmployeeList,int id, int limite);
 int removeEmployee(Employee* list, int len, int id);
 int sortEmployees(Employee* list, int len, int order);

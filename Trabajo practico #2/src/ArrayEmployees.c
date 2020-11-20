@@ -12,7 +12,7 @@
 #include <ctype.h>
 
 static int generateNewID(void);
-static int isEmpty(Employee *list, int len);
+static int searchForEmpty(Employee *list, int len);
 static int receiveMoreThanAverage(Employee *list, int len, float salaryAverage,int *pQTYemployeesWhoReceiveMoreThanAverage);
 static int sortEmployeeBySector(Employee *list, int len, int order);
 static int sortEmployeeByLastName(Employee *list, int len, int order);
@@ -31,10 +31,10 @@ static int UpperFirstChar(char *string)
 		char bufferName[LONG_NOMBRE];
 		strncpy(bufferName, string, LONG_NOMBRE);
 		bufferName[0] = toupper(bufferName[0]);
-			for(int i=1;i<LONG_NOMBRE;i++)
-			{
-				bufferName[i] = tolower(bufferName[i]);
-			}
+		for(int i=1;i<LONG_NOMBRE;i++)
+		{
+		bufferName[i] = tolower(bufferName[i]);
+		}
 		strncpy(string, bufferName, LONG_NOMBRE);
 		functionReturn = 0;
 	}
@@ -44,9 +44,11 @@ static int UpperFirstChar(char *string)
 /** \brief: Add a new employee to the list
  * \param list  		: current list of employees
  * \param len 			: list length
+ * \param pFlagFirstLoad: if it is true we can use the function
  * \return functionReturn : (-1) if Error [Invalid len or  the list is out of data] - (0) if Ok
  */
-int employee_AddEmployeeData(Employee *list, int len) {
+int employee_AddEmployeeData(Employee *list, int len)
+{
 	int functionReturn = -1;
 	int id;
 	char name[51];
@@ -57,17 +59,25 @@ int employee_AddEmployeeData(Employee *list, int len) {
 	if(list!=NULL && len>0)
 	{
 		if ((employee_seachFreeIndex(list, len, &index) == 0)
-			&& (utn_getCadena("\nIngresar nombre: ", "\n Error! Ingrese un dato valido.\n", name, ATTEMPTS,LONG_NOMBRE) == 0)
-			&& (utn_getCadena("Ingresar apellido: ","\n Error! Ingrese un dato valido.\n", lastName,ATTEMPTS, LONG_NOMBRE) == 0)
-			&& (utn_getNumberInt("Ingresar sector <1-2-3-4-5> : ", "\n Error! Ingrese un dato valido.\n",&sector, ATTEMPTS, 1, 5) == 0)
-			&& (utn_getNumberFloat("Ingrese su salario: ","\n Error! Ingrese un dato valido.\n", &salary,
+			&& (utn_getString("\nIngresar nombre: ", "\n Error! Ingrese un dato valido.\n", name, ATTEMPTS,
+					LONG_NOMBRE) == 0)
+
+			&& (utn_getString("Ingresar apellido: ","\n Error! Ingrese un dato valido.\n", lastName,
+					ATTEMPTS, LONG_NOMBRE) == 0)
+
+			&& (utn_getInt("Ingresar sector <1-2-3-4-5> : ", "\n Error! Ingrese un dato valido.\n",
+					&sector, ATTEMPTS, 1, 5) == 0)
+
+			&& (utn_getFloat("Ingrese su salario: ","\n Error! Ingrese un dato valido.\n", &salary,
 					ATTEMPTS, 0, INT_MAX) == 0))
 	{
 		id = generateNewID();
-		addToList(list, len, id, name, lastName, salary, sector,index);
+		AddEmployees(list, len, id, name, lastName, salary, sector,index);
 		functionReturn = 0;
-	} else {
-		printf("\nHubo un error en la carga. ");
+		printf("\nEmpleado añadido exitosamente.\n");
+	} else
+	{
+		printf("\nHubo un error cargando el empleado..\n");
 	}
 
 	}
@@ -81,32 +91,51 @@ int employee_AddEmployeeData(Employee *list, int len) {
  * \return functionReturn : (-1) if Error [Invalid len or  the list is out of data] - (0) if Ok
  */
 static int sortEmployeeByLastName(Employee *list, int len, int order) {
-	int retorno = -1;
+	int functionReturn = -1;
 	int sorted;
 	Employee bufferEmployee;
-	do
+	if(list!=NULL && searchForEmpty(list, len) == 0)
 	{
+		do{
 		sorted = TRUE;
-		for(int i = 0; i < (len-1); i++)
+		for (int i = 0; i < (len - 1); i++)
 		{
-			if((order == 1 &&
-			  (strncmp(list[i].lastName, list[i + 1].lastName,LONG_NOMBRE)>0 ||
-			  (strncmp(list[i].lastName, list[i + 1].lastName,LONG_NOMBRE)==0 &&
-			   strncmp(list[i].name, list[i + 1].name,LONG_NOMBRE)>0))) ||
-			  (order == 2 &&
-			  (strncmp(list[i].lastName, list[i + 1].lastName,LONG_NOMBRE)<0 ||
-			  (strncmp(list[i].lastName, list[i + 1].lastName,LONG_NOMBRE)==0 &&
-			   strncmp(list[i].name, list[i + 1].name,LONG_NOMBRE)<0))))
+			switch (order)
 			{
-				bufferEmployee = list[i];
-				list[i] = list[i + 1];
-				list[i + 1] = bufferEmployee;
-				sorted = FALSE;
+			case 1:
+				if (strncmp(list[i].lastName, list[i + 1].lastName, LONG_NOMBRE)
+						> 0
+						|| (strncmp(list[i].lastName, list[i + 1].lastName,
+								LONG_NOMBRE) == 0
+								&& strncmp(list[i].name, list[i + 1].name,
+										LONG_NOMBRE) > 0))
+				{
+					bufferEmployee = list[i];
+					list[i] = list[i + 1];
+					list[i + 1] = bufferEmployee;
+					sorted = FALSE;
+				}
+				break;
+			case 2:
+				if (strncmp(list[i].lastName, list[i + 1].lastName, LONG_NOMBRE)
+						< 0
+						|| (strncmp(list[i].lastName, list[i + 1].lastName,
+								LONG_NOMBRE) == 0
+								&& strncmp(list[i].name, list[i + 1].name,
+										LONG_NOMBRE) < 0))
+				{
+					bufferEmployee = list[i];
+					list[i] = list[i + 1];
+					list[i + 1] = bufferEmployee;
+					sorted = FALSE;
+				}
+				break;
 			}
 		}
-	}while(sorted == FALSE);
-	retorno = 0;
-	return retorno;
+	} while (sorted == FALSE);
+	functionReturn = 0;
+	}
+	return functionReturn;
 }
 
 /** \brief: Sort the list according to the sector of each employee
@@ -116,33 +145,47 @@ static int sortEmployeeByLastName(Employee *list, int len, int order) {
  * \return functionReturn : (-1) if Error [Invalid len or  the list is out of data] - (0) if Ok
  */
 static int sortEmployeeBySector(Employee *list, int len, int order) {
-	int retorno = -1;
+	int functionReturn = -1;
 	int sorted;
 	Employee bufferEmployee;
-
-	do
+	if(list!=NULL && searchForEmpty(list, len) == 0)
 	{
+	do {
 		sorted = TRUE;
-		for(int i = 0; i < (len-1); i++)
+		for (int i = 0; i < (len - 1); i++)
 		{
-
-			if((order == 1 && list[i].sector > list[i + 1].sector) ||
-			   (order == 2 && list[i].sector < list[i + 1].sector))
+			switch (order)
 			{
-				bufferEmployee = list[i];
-				list[i] = list[i + 1];
-				list[i + 1] = bufferEmployee;
-				sorted = FALSE;
+			case 1:
+				if (list[i].sector > list[i + 1].sector)
+				{
+					bufferEmployee = list[i];
+					list[i] = list[i + 1];
+					list[i + 1] = bufferEmployee;
+					sorted = FALSE;
+				}
+				break;
+			case 2:
+				if (list[i].sector < list[i + 1].sector)
+				{
+					bufferEmployee = list[i];
+					list[i] = list[i + 1];
+					list[i + 1] = bufferEmployee;
+					sorted = FALSE;
+				}
+				break;
 			}
 		}
-	}while(sorted == FALSE);
-	retorno = 0;
-	return retorno;
+	} while (sorted == FALSE);
+	functionReturn = 0;
+	}
+	return functionReturn;
 }
 
 /** \brief: Report of all employees on the list with descending and ascending options
  * \param list  		: current list of employees
  * \param len 			: list length
+ * \param flagFirstLoad : if it is true we can use the function
  * \return functionReturn : (-1) if Error [Invalid len or  the list is out of data] - (0) if Ok
  */
 int employee_Report(Employee *list, int len) {
@@ -151,24 +194,27 @@ int employee_Report(Employee *list, int len) {
 	float totalSalary;
 	float averageSalary;
 	int moreThanAverage;
-	if (list != NULL && len > 0 && isEmpty(list, len)==0)
+	if (list != NULL && searchForEmpty(list, len) == 0)
 	{
-		if (utn_getNumberInt(
+		if (utn_getInt(
 				"\nIngrese un valor para ordenar: \n1-Descendante \n2-Ascendente ",
-				"\n Error! Ingrese un dato valido.\n", &orderBy, ATTEMPTS, 1, 2) == 0)
+				"\n Error! Ingrese un dato valido.\n", &orderBy, ATTEMPTS, 0, 2) == 0)
 		{
-			sortEmployeeBySector(list, len, orderBy);
 			sortEmployeeByLastName(list, len, orderBy);
-
+			sortEmployeeBySector(list, len, orderBy);
 			calculateTotalAndAverageSalary(list, len, &totalSalary,&averageSalary);
 			receiveMoreThanAverage(list, len, averageSalary, &moreThanAverage);
 			functionReturn = 0;
 		}
+		printf("\nREPORTE DE EMPLEADOS.\n");
 		printEmployees(list, len);
-		printf("\nEl salario total es : $%.2f "
-				"\nEl promedio del salario es : $%2.f "
+		printf("\nEl salario total es : %.2f "
+				"\nEl promedio del salario es : %2.f "
 				"\nCantidad de empleados que superan el promedio es: %d \n",
 				totalSalary, averageSalary, moreThanAverage);
+	}else
+	{
+		printf("\nNo puede ingresar a esta opcion sin antes cargar un empleado.\n");
 	}
 	return functionReturn;
 }
@@ -231,6 +277,7 @@ static int receiveMoreThanAverage(Employee *list, int len, float salaryAverage,i
 /** \brief: Modify an employee from the list using their ID
  * \param list  		: current list of employees
  * \param len 			: list length
+ * \param flagFirstLoad : if it is true we can use the function
  * \return functionReturn : (-1) if Error [Invalid len or  the list is out of data] - (0) if Ok
  */
 int employee_ModifyData(Employee *list, int len)
@@ -240,24 +287,35 @@ int employee_ModifyData(Employee *list, int len)
 	int ID;
 	int fieldToModify;
 	int modifyFlag;
-	if (list != NULL && len > 0 && isEmpty(list,len)==0)
+	if (list != NULL && searchForEmpty(list, len) == 0)
 	{
-		if (utn_getNumberInt("\nIngrese el ID del empleado a modificar: ","\n Error! Ingrese un dato valido.\n", &ID, ATTEMPTS, 0, INT_MAX)== 0)
+		printEmployees(list, len);
+		if (utn_getInt("\nIngrese el ID del empleado a modificar: ",
+				"\n Error! Ingrese un dato valido.\n", &ID, ATTEMPTS, 0, INT_MAX)
+				== 0)
 		{
 			index = findEmployeeById(list, ID, len);
-			if (index != -1)
+			if (index != -1) //isEmpty == TRUE
 					{
 				Employee bufferEmployee = list[index];
 				modifyFlag = FALSE;
+
 				do {
-					utn_getNumberInt("\n¿Que campo desea modificar? \n1-Nombre: \n2-Apellido: \n3-Salario: \n4-Sector: \n5-FINALIZAR EDICION: ","\n Error! Ingrese un dato valido.\n",
+
+					utn_getInt(
+							"\n¿Que campo desea modificar? \n1-Nombre: \n2-Apellido: \n3-Salario: \n4-Sector: \n5-FINALIZAR EDICION: ",
+							"\n Error! Ingrese un dato valido.\n",
 							&fieldToModify,
 							ATTEMPTS, 1, 5);
 					switch (fieldToModify)
 					{
 					case 1:
-						if (utn_getCadena("\nIngrese el nuevo nombre del empleado: ","\n Error! Ingrese un dato valido.\n",bufferEmployee.name, ATTEMPTS, LONG_NOMBRE)== 0)
-						{
+						if (utn_getString(
+								"\nIngrese el nuevo nombre del empleado: ",
+								"\n Error! Ingrese un dato valido.\n",
+								bufferEmployee.name, ATTEMPTS, LONG_NOMBRE)
+								== 0)
+								{
 							printf("\nSe actualizo correctamente el empleado\n");
 							modifyFlag = TRUE;
 							functionReturn = 0;
@@ -265,8 +323,11 @@ int employee_ModifyData(Employee *list, int len)
 						break;
 
 					case 2:
-						if (utn_getCadena("\nIngrese el nuevo apellido del empleado: ","\n Error! Ingrese un dato valido.\n",bufferEmployee.lastName, ATTEMPTS, LONG_NOMBRE)== 0)
-						{
+						if (utn_getString(
+								"\nIngrese el nuevo apellido del empleado: ",
+								"\n Error! Ingrese un dato valido.\n",
+								bufferEmployee.lastName, ATTEMPTS, LONG_NOMBRE)
+								== 0) {
 							printf("\nSe actualizo correctamente el empleado\n");
 							modifyFlag = TRUE;
 							functionReturn = 0;
@@ -274,15 +335,24 @@ int employee_ModifyData(Employee *list, int len)
 						break;
 
 					case 3:
-						if (utn_getNumberFloat("\nIngrese el nuevo salario del empleado: ","\n Error! Ingrese un dato valido.\n",&bufferEmployee.salary, ATTEMPTS, 0,INT_MAX)== 0)
-						{
+						if (utn_getFloat(
+								"\nIngrese el nuevo salario del empleado: ",
+								"\n Error! Ingrese un dato valido.\n",
+								&bufferEmployee.salary, ATTEMPTS, 0, 9999.00)
+								== 0) {
 							printf("\nSe actualizo correctamente el empleado\n");
 							modifyFlag = TRUE;
 							functionReturn = 0;
 						}
 						break;
 					case 4:
-						if (utn_getNumberInt("\nIngrese el nuevo sector del empleado <1-2-3-4-5>: ","\n Error! Ingrese un dato valido.\n",&bufferEmployee.sector, ATTEMPTS, 1, 5) == 0)
+						if (
+
+						utn_getInt(
+								"\nIngrese el nuevo sector del empleado <1-2-3-4-5>: ",
+								"\n Error! Ingrese un dato valido.\n",
+								&bufferEmployee.sector, ATTEMPTS, 1, 5) == 0)
+
 						{
 							printf("\nSe actualizo correctamente el empleado\n");
 							modifyFlag = TRUE;
@@ -290,23 +360,25 @@ int employee_ModifyData(Employee *list, int len)
 						}
 						break;
 					}
-					if (modifyFlag == TRUE)
-					{
-						addToList(list, len, ID, bufferEmployee.name,
-						bufferEmployee.lastName, bufferEmployee.salary,
-						bufferEmployee.sector, index);
+
+					if (modifyFlag == TRUE) {
+						AddEmployees(list, len, ID, bufferEmployee.name,
+								bufferEmployee.lastName, bufferEmployee.salary,
+								bufferEmployee.sector, index);
 					}
-				}while (fieldToModify != 5);
-			}
-			else
-			{
+
+				} while (fieldToModify != 5);
+
+			} else {
 				printf("\nID inexistente \n ");
 			}
-		}
-		else
-		{
+
+		} else {
 			printf("\nError. ");
 		}
+	}else
+	{
+		printf("\nNo puede ingresar a esta opcion sin antes cargar un empleado.\n");
 	}
 	return functionReturn;
 }
@@ -324,7 +396,7 @@ int removeEmployee(Employee *list, int len, int id)
 	if (list != NULL && len > 0)
 	{
 		bufferIndex = findEmployeeById(list, len, id);
-		if(bufferIndex != -1)
+		if (bufferIndex != -1)
 		{
 			list[bufferIndex].isEmpty = TRUE;
 			functionReturn = 0;
@@ -336,6 +408,7 @@ int removeEmployee(Employee *list, int len, int id)
 /** \brief: Remove an employee from the list using their ID
  * \param list  		: current list of employees
  * \param len 			: list length
+ * \param flagFirstLoad : if it is true we can use the function
  * \return functionReturn : (-1) if Error [Invalid len or  the list is out of data] - (0) if Ok
  */
 int employee_removeEmployee(Employee *list, int len)
@@ -343,22 +416,32 @@ int employee_removeEmployee(Employee *list, int len)
 	int idToFind;
 	int functionReturn = -1;
 	int flagRemove = 2;
-	if (list != NULL && len > 0 && isEmpty(list, len)==0)
+	if (list != NULL && searchForEmpty(list, len) == 0)
 	{
 		do {
-			if (utn_getNumberInt("\nIngrese el id a eliminar: ","\n Error! Ingrese un dato valido.\n", &idToFind, ATTEMPTS,0, INT_MAX) == 0)
+			printEmployees(list, len);
+			if (utn_getInt("\nIngrese el id a eliminar: ",
+					"\n Error! Ingrese un dato valido.\n", &idToFind, ATTEMPTS,
+					0, INT_MAX) == 0)
 			{
 				if (removeEmployee(list, idToFind, len) == 0)
 				{
 					functionReturn = 0;
 					flagRemove = 2;
+					printf("\nEmpleado eliminado.\n");
 				} else
 				{
 					flagRemove = 1;
-					utn_getNumberInt("\nEmpleado inexiste. Desde intentar nuevamente? \n1-Si \n2-No","\n Error! Ingrese un dato valido.\n", &flagRemove,ATTEMPTS, 1, 2);
+					utn_getInt(
+							"\nEmpleado inexiste. Desde intentar nuevamente? \n1-Si \n2-No",
+							"\n Error! Ingrese un dato valido.\n", &flagRemove,
+							ATTEMPTS, 1, 2);
 				}
 			}
-		} while(flagRemove != 2);
+		} while (flagRemove != 2);
+	}else
+	{
+		printf("\nNo puede ingresar a esta opcion sin antes cargar un empleado.\n");
 	}
 	return functionReturn;
 }
@@ -449,7 +532,7 @@ int employee_seachFreeIndex(Employee *list, int len, int *pFreeIndex) {
  * \return int Return (-1) if Error [Invalid len or NULL pointer or without
  free space] - (0) if Ok
  */
-int addToList(Employee *list, int len, int id, char name[], char lastName[],float salary, int sector, int index)
+int AddEmployees(Employee *list, int len, int id, char name[], char lastName[],float salary, int sector, int index)
 {
 	int functionReturn = -1;
 	if (list != NULL && len > 0)
@@ -474,7 +557,7 @@ int addToList(Employee *list, int len, int id, char name[], char lastName[],floa
  */
 int printEmployees(Employee *list, int len) {
 	int functionReturn = -1;
-		if (list != NULL && len > 0)
+		if (list != NULL && searchForEmpty(list, len) == 0)
 		{
 			printf("\nLastName        Name            Sector     ID     Salary\n");
 			for (int i = 0; i < len; i++)
@@ -489,26 +572,27 @@ int printEmployees(Employee *list, int len) {
 	return functionReturn;
 }
 
-
-/** \brief: Check if the entire list of employees is empty
- * \param list : current list of employees
- * \param len : list len
- * \return functionReturn : (-1) if Error [Invalid len or  the list is out of data] - (0) if Ok
+/**
+ * \brief Function to search in the Employee array for an empty field
+ * \param Employee *list: Pointer to an Employee array
+ * \param int len: Length of the array
+ * \return (-1) if something went wrong, (0) if everything is OK
  */
-static int isEmpty(Employee *list, int len)
+
+static int searchForEmpty(Employee *list, int len)
 {
-	int functionReturn =-1;
+	int retornar = -1;
 	if(list != NULL && len > 0)
 	{
 		for(int i=0; i<len; i++)
 		{
 			if(list[i].isEmpty == FALSE)
 			{
-				functionReturn =0;
+				retornar = 0;
 				break;
 			}
 		}
 	}
-
-	return functionReturn;
+	return retornar;
 }
+
