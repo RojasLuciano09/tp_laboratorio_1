@@ -274,6 +274,7 @@ int ll_clear(LinkedList* this)
         {
             ll_remove(this,0);
         }
+    	this->pFirstNode=NULL;
         output=0;
     }
     return output;
